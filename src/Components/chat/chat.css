@@ -71,7 +71,7 @@
 
     .box{
         width: 89vw;
-        height: 80vh;
+        height: 70vh;
         margin: auto;
         /* background: ; */
         background-image: linear-gradient(to right, rgba(255, 0, 0, 0.24),rgba(255, 166, 0, 0.301),rgba(255, 255, 0, 0.301),rgba(0, 128, 0, 0.137),rgba(0, 0, 255, 0.418),rgba(76, 0, 130, 0.377),rgba(238, 130, 238, 0.37));
