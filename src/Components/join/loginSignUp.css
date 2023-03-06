@@ -2,10 +2,13 @@
   margin: 0%;
   box-sizing: border-box;
 }
-.hding{
-  color: rgb(239, 239, 253);
+#hding{
+  color: rgb(214, 167, 37);
+  margin: auto;
+  margin-top: 5%;
+  margin-bottom: 1%;
   text-align: center;
-  font-size:  3.2vw;
+  font-size:  2rem;
   font-style: normal;
   font-family: 'Gill Sans', 'Gill Sans MT', 'Trebuchet MS', sans-serif Arial, Helvetica, sans-serif;
 }
@@ -24,12 +27,12 @@
 
 .customForm{
   width: 56vw;
-  height: 80vh;
+  height: 80%;
   /* border: 2px solid black; */
 }
 
 .checkme{
-  color: rgb(183, 240, 91);
+  color: rgb(163, 252, 21);
   font-weight: 300;
   font-style: italic;
 }
@@ -44,7 +47,6 @@
   width: 18vw;
   padding: 0.5% , 2%;
   margin: auto;
-
 }
 input:focus{
   color: rgb(13, 14, 12);
@@ -55,7 +57,7 @@ input:focus{
 }
 
 .pLink{
-  color: rgb(181, 248, 23);
+  color: rgb(61, 30, 241);
 }
 
 .pLink:hover{
@@ -64,4 +66,67 @@ input:focus{
   text-decoration: underline;
   background-color: aqua;
 
+}
+
+/* $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$ */
+
+
+@media (max-width:700px) {
+  #hding{
+    color: rgb(103, 116, 238);
+    font-size: 2em;
+    margin-top: 20vh;
+  }
+  .customForm{
+    width: 100vw;
+    text-align: center;
+  }
+  .input{ max-height: 95vh;
+      /* height: 90vh; */
+      margin: auto;
+      font-size: 100%;
+      width: 80vw;
+      
+  }
+  .form-check{
+    display: flex ;
+    flex-direction:column;
+    justify-content: space-around;
+    flex-wrap: wrap;
+    /* align-items: center;
+    width: 100%;
+    width: 100%; */
+  }
+
+  .btn1{
+    color: black;
+    display: flex;
+    justify-content: center;
+    background-color: rgb(147, 194, 93);
+    text-align: center;
+    font-size: 1.3rem;
+    width: 25vw;
+    padding: 0.5% , 2%;
+    margin: auto;
+  }
+  input:focus{
+    color: rgb(13, 14, 12);
+    background-color: rgb(252, 186, 107);
+    font-size: 1.2em;
+    font-weight: 600;
+    font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;  
+  }
+  
+  .pLink{
+    color: rgb(111, 86, 250);
+  }
+  
+  .pLink:hover{
+    color: rgb(8, 8, 253);
+    font-weight: 500;
+    text-decoration: underline;
+    background-color: aqua;
+  
+  }
+  
 }

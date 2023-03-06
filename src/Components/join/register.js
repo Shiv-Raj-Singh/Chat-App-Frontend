@@ -48,9 +48,9 @@ console.log(user);
         <>
             <div className="JoinPage">
           <div className="JoinContainer">
+            <p id='hding'>Register Your Account </p>
              <form className="container mt-5 customForm" id='customForm' onSubmit={handleSubmit}>
                     {/* <h1 className='hding'>Register Your Account </h1> */}
-                    <p className='hding mb-4'>Register Your Account </p>
                     <div className="mb-3 ">
                         <input type="text" className="form-control"required placeholder='Enter Your Name' name="name" onChange={handleOnChange} id="exampleInputEmail1" aria-describedby="emailHelp"/>
                     </div>

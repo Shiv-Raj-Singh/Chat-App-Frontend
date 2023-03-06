@@ -68,9 +68,9 @@ console.log(newUser);
 
         <div className="container chatBox mt-2" id="chatBox"  >
                 <div className="text-center px-3 mb-4 text-capitalize d-flex justify-content-between align-items-center">
-                    <h1 className="hding">Welcome in {data?.room} Chat Room</h1>
+                    <h1 className="hding mt-3">Welcome in {data?.room} Chat Room</h1>
                 <div>
-                <svg xmlns="http://www.w3.org/2000/svg" width={36} height={36} fill="currentColor" className="bi bi-x text-light border border-warning" viewBox="0 0 16 16">
+                <svg xmlns="http://www.w3.org/2000/svg" width={36} height={36} fill="currentColor" className="bi cross bi-x text-light border border-warning" viewBox="0 0 16 16">
         <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z"
         onClick={()=>Navigate('/')} 
         />
@@ -79,7 +79,7 @@ console.log(newUser);
       </svg>
                 </div>
                 </div>
-                <div className="border rounded p-3 mb-4 box" style={{height: "70vh", overflowY:"scroll"}}>
+                <div className="border rounded p-3 mb-4 box">
                     {
                         (newUser && newUser===data.room)&&<span className="d-flex flex-column align-items-end" >someone join the chat-room</span>
                     }
@@ -88,17 +88,17 @@ console.log(newUser);
                             return data.name === msg.name
                             ?
                             <div className="row justify-content-end pl-5 ">
-                                <div className="d-flex flex-column align-items-end m-2 shadow p-2 bg-info border rounded w-auto">
+                                <div className="d-flex flex-column align-items-end m-2 shadow border rounded " id="msg" >
                                     <div>
-                                        <strong className="m-1">{msg.name}</strong>
-                                        <small className="text-muted m-1"><Moment fromNow>{msg.time}</Moment></small>
+                                        <strong className="m-1 msgName">{msg.name}</strong>
+                                        <small className="text-muted m-1 msgTime"><Moment fromNow>{msg.time}</Moment></small>
                                     </div>
-                                    <h4 className="m-1">{msg.msg}</h4>
+                                    <h4 className="m-1 msg">{msg.msg}</h4>
                                 </div>
                             </div>
                             :
                             <div className="row justify-content-start">
-                                <div className="d-flex flex-column m-2 p-2 shadow bg-white border rounded w-auto">
+                                <div className="d-flex flex-column m-2 p-2 shadow bg-white border rounded w-auto" id="msg">
                                     <div>
                                         <strong className="m-1">{msg.name}</strong>
                                         <small className="text-mmuted m-1"><Moment fromNow>{msg.time}</Moment></small>
@@ -110,8 +110,8 @@ console.log(newUser);
                     }
                     <div ref={msgBoxRef} ></div>
                 </div>
-                <div className="form-group d-flex">
-                    <input type="text" className="form-control bg-light" name="message" onKeyDown={handleEnter} placeholder="Type your message" value={msg} onChange={handleChange} />
+                <div className="form-group d-flex msgType mx-5">
+                    <input type="text" className="form-control bg-light ml-5" name="message" onKeyDown={handleEnter} placeholder="Type your message" value={msg} onChange={handleChange} />
                     <button type="button" className="btn btn-warning mx-2" disabled={loading} onClick={onSubmit}>
                         {
                             loading

@@ -44,9 +44,9 @@ const Login = () => {
     return (
         <div className="JoinPage">
           <div className="JoinContainer">
-             <form className="container mt-5 customForm" onSubmit={handleSubmit} method={"POST"} >
+            <p id='hding'>Login Your Account </p>
+             <form className="container customForm" onSubmit={handleSubmit} method={"POST"} >
 
-                    <p className='hding'>Login Your Account </p>
             
                     <div className="mb-3 ">
                         <input type="tel" name="phone" onChange={handleOnChange}  className="input form-control mt-3" placeholder='Enter Your Phone' required id="exampleInputEmail1" aria-describedby="emailHelp"/>
@@ -58,18 +58,18 @@ const Login = () => {
                             <select className="form-select mt-4 input" required name='room' aria-label="Default select example" onChange={handleOnChange}>
                                 <option selected>Choose Your Fav Chat Room </option>
                                 <option value='study'>Study</option>
-                                <option value="Medical">Medical</option>
+                                <option value="gaming">Medical</option>
                                 <option value='Sports'>Sports</option>
                                 <option value='Coding'>Software</option>
                                 <option value='music'>music</option>
                                 <option value='movies'>movies</option>
-                                <option value={3}>others</option>
+                                <option value='Guest-Room'>others</option>
                             </select>
                     <div className="mb-3 form-check">
                         <div className='d-flex justify-content-between'>
                             <div>
                             <input type="checkbox" className="form-check-input mx-1 mt-3" id="exampleCheck1" />
-                        <label className="form-check-label checkme mt-3" required for="exampleCheck1">Check me out</label>
+                            <label className="form-check-label checkme mt-3" required for="exampleCheck1">Check me out</label>
                             </div>
                             <div>
                             <p onClick={()=>Navigate('/')} className="mt-2 pLink">Haven't Account Register Here</p>
