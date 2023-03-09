@@ -7,6 +7,9 @@ import './chat.css'
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
+import ScrollToBottom from 'react-scroll-to-bottom';
+
+
 const ChatRoom = () => {
     const Navigate = useNavigate()
     const location = useLocation()
@@ -79,6 +82,8 @@ console.log(newUser);
       </svg>
                 </div>
                 </div>
+    <ScrollToBottom>
+
                 <div className="border rounded p-3 mb-4 box">
                     {
                         (newUser && newUser===data.room)&&<span className="d-flex flex-column align-items-end" >someone join the chat-room</span>
@@ -110,7 +115,9 @@ console.log(newUser);
                     }
                     <div ref={msgBoxRef} ></div>
                 </div>
-                <div className="form-group d-flex msgType mx-5">
+
+</ScrollToBottom>
+                               <div className="form-group d-flex msgType mx-5">
                     <input type="text" className="form-control bg-light ml-5" name="message" onKeyDown={handleEnter} placeholder="Type your message" value={msg} onChange={handleChange} />
                     <button type="button" className="btn btn-warning mx-2" disabled={loading} onClick={onSubmit}>
                         {
