@@ -66,7 +66,7 @@ const Login = () => {
                                 <option value='Guest-Room'>others</option>
                             </select>
                     <div className="mb-3 form-check">
-                        <div className='d-flex footer mt-3'>
+                        <div className='d-flex justify-content-between footer mt-3'>
                             <div className=''>
                             <input type="checkbox" required className="form-check-input" id="exampleCheck1" />
                             <label className="form-check-label checkme " required for="exampleCheck1">Check me out</label>

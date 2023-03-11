@@ -68,7 +68,7 @@ console.log(user);
                         name="cPassword" onChange={handleOnChange} id="exampleInputPassword1" />
                     </div>
                     <div className="mb-3 form-check">
-                        <div className='d-flex footer'>
+                        <div className='d-flex footer justify-content-between'>
                             <div>
                             <input type="checkbox" className="form-check-input" required id="exampleCheck1" />
                         <label className="form-check-label checkme" for="exampleCheck1">Check me out</label>
