@@ -42,8 +42,8 @@ const Login = () => {
 
 
     return (
-        <div className="JoinPage mt-5">
-          <div className="JoinContainer mt-3">
+        <div className="JoinPage mt-5 pt-3">
+          <div className="JoinContainer mt-3 pt-2">
             <p id='hding'>Login Your Account </p>
              <form className="container customForm mt-2" onSubmit={handleSubmit} method={"POST"} >
 
@@ -66,7 +66,7 @@ const Login = () => {
                                 <option value='Guest-Room'>others</option>
                             </select>
                     <div className="mb-3 form-check">
-                        <div className='d-flex justify-content-between mt-3'>
+                        <div className='d-flex footer mt-3'>
                             <div className=''>
                             <input type="checkbox" required className="form-check-input" id="exampleCheck1" />
                             <label className="form-check-label checkme " required for="exampleCheck1">Check me out</label>

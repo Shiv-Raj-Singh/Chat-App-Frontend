@@ -7,7 +7,7 @@
   /* border: 2px solid rgb(106, 216, 15);    */
   background-color: rgb(139, 139, 136);
   width: 69vw;
-  height: 85vh;
+  height: 90vh;
   margin: auto;
 }
 .JoinContainer{
@@ -164,8 +164,33 @@ input:focus{
   
 }
 @media (max-width: 460px) {
+  *{
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+  }
+  .JoinContainer{
+    width: 98%;
+  }
+  .customForm{
+    height: 90%;
+    width: 100%;
+    padding-right: 2%;
+    padding-bottom: 3%;
+  }
+  .JoinPage{
+    height: 100%;
+    width: 100%;
+    padding-bottom: 3%;
+  }
+
   .pLink{
     color: rgb(111, 86, 250);
+    display: block;
     font-size: 14px;
+  }
+  .footer{
+    flex-direction: column;
+    align-items: center;
   }
 }

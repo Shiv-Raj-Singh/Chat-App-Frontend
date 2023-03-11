@@ -46,10 +46,10 @@ console.log(user);
 
     return (
         <>
-            <div className="JoinPage mt-5">
-          <div className="JoinContainer mt-3 py-3 px-3">
+            <div className="JoinPage mt-5 pt-3">
+          <div className="JoinContainer mt-3 py-3 px-3 pt-3">
             <p id='hding'>Register Your Account </p>
-             <form className="container mt-2 customForm" id='customForm' onSubmit={handleSubmit}>
+             <form className="container mt-2 customForm pt-5" id='customForm' onSubmit={handleSubmit}>
                     {/* <h1 className='hding'>Register Your Account </h1> */}
                     <div className="mb-3 ">
                         <input type="text" value={user.name} className="form-control input"required placeholder='Enter Your Name' name="name" onChange={handleOnChange} id="exampleInputEmail1" aria-describedby="emailHelp"/>
@@ -68,7 +68,7 @@ console.log(user);
                         name="cPassword" onChange={handleOnChange} id="exampleInputPassword1" />
                     </div>
                     <div className="mb-3 form-check">
-                        <div className='d-flex justify-content-between'>
+                        <div className='d-flex footer'>
                             <div>
                             <input type="checkbox" className="form-check-input" required id="exampleCheck1" />
                         <label className="form-check-label checkme" for="exampleCheck1">Check me out</label>
