@@ -2,37 +2,52 @@
   margin: 0%;
   box-sizing: border-box;
 }
-#hding{
-  color: rgb(214, 167, 37);
+
+.JoinPage{
+  /* border: 2px solid rgb(106, 216, 15);    */
+  background-color: rgb(139, 139, 136);
+  width: 69vw;
+  height: 85vh;
   margin: auto;
-  margin-top: 5%;
-  margin-bottom: 1%;
+}
+.JoinContainer{
+  /* border: 2px solid black; */
+  width: 66vw;
+  height: 80vh;
+  margin:  auto;
+  background-color: rgb(85, 121, 148);
+}
+
+#hding{
+  color: darkgreen;
+  margin: auto;
+  /* margin-bottom: 0.5%; */
   text-align: center;
-  font-size:  2rem;
+  font-size:  1.5rem;
   font-style: normal;
+  font-weight: 900;
   font-family: 'Gill Sans', 'Gill Sans MT', 'Trebuchet MS', sans-serif Arial, Helvetica, sans-serif;
 }
-.input{
-  color: darkred;
-  font-weight: 700;
-  margin-top: 4%;
-  background-color: rgb(25, 199, 199);
-}
-.hding:hover{
-  color: rgb(25, 179, 89);
-  font-size:  3.4vw;
+
+#hding:hover{
+  color: rgb(15, 15, 12);
+  font-size:  1.7vw;
+  font-weight: 900;
   font-weight: 300;
   font-family: 'Gill Sans', 'Gill Sans MT', 'Trebuchet MS', sans-serif Arial, Helvetica, sans-serif;
 }
 
 .customForm{
+  padding: 2%;
   width: 56vw;
-  height: 80%;
+  height: 87%;
   /* border: 2px solid black; */
+  box-shadow: 0 , 10px , 20px, 0 ;
+  background-color: rgba(88, 75, 75, 0.788);
 }
 
 .checkme{
-  color: rgb(163, 252, 21);
+  color: rgb(7, 8, 6);
   font-weight: 300;
   font-style: italic;
 }
@@ -50,7 +65,7 @@
 }
 input:focus{
   color: rgb(13, 14, 12);
-  background-color: rgb(252, 186, 107);
+  background-color: rgb(75, 60, 43);
   font-size: 1.2em;
   font-weight: 600;
   font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;  
@@ -73,20 +88,38 @@ input:focus{
 
 @media (max-width:700px) {
   #hding{
-    color: rgb(103, 116, 238);
-    font-size: 2em;
-    margin-top: 20vh;
+    color: rgb(18, 18, 20);
+    font-style: italic;
+    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+    font-size: 1.5em;
+    /* margin-top: 20vh; */
   }
+  #hding:hover{
+    color: rgb(62, 85, 8);
+    font-size:  1.7rem;
+    font-weight: 900;
+    font-style: normal;
+    font-family: 'Gill Sans', 'Gill Sans MT', 'Trebuchet MS', sans-serif Arial, Helvetica, sans-serif;
+  }
+  
   .customForm{
-    width: 100vw;
-    text-align: center;
+    width: 78vw;
+    /* text-align: center; */
+    box-shadow: 0 , 10px , 20px, 0 ;
   }
-  .input{ max-height: 95vh;
-      /* height: 90vh; */
-      margin: auto;
-      font-size: 100%;
-      width: 80vw;
-      
+  .JoinContainer{
+    border: 2px solid black;
+    width: 90vw;
+    height: 80vh;
+    margin:  auto;
+    background-color: rgb(85, 121, 148);
+  }
+
+  .JoinPage{
+    width: 98vw;
+    height: 85vh;
+    margin:  auto;
+    background-color: rgb(21, 226, 226);
   }
   .form-check{
     display: flex ;
@@ -129,4 +162,10 @@ input:focus{
   
   }
   
+}
+@media (max-width: 460px) {
+  .pLink{
+    color: rgb(111, 86, 250);
+    font-size: 14px;
+  }
 }

@@ -42,17 +42,17 @@ const Login = () => {
 
 
     return (
-        <div className="JoinPage">
-          <div className="JoinContainer">
+        <div className="JoinPage mt-5">
+          <div className="JoinContainer mt-3">
             <p id='hding'>Login Your Account </p>
-             <form className="container customForm" onSubmit={handleSubmit} method={"POST"} >
+             <form className="container customForm mt-2" onSubmit={handleSubmit} method={"POST"} >
 
             
                     <div className="mb-3 ">
-                        <input type="tel" name="phone" onChange={handleOnChange}  className="input form-control mt-3" placeholder='Enter Your Phone' required id="exampleInputEmail1" aria-describedby="emailHelp"/>
+                        <input type="tel" name="phone" value={user.phone} onChange={handleOnChange}  className="input form-control mt-3" placeholder='Enter Your Phone' required id="exampleInputEmail1" aria-describedby="emailHelp"/>
                     </div>
                     <div className="mb-3">
-                        <input type="password" name="password" onChange={handleOnChange}  className="input form-control mt-4" required placeholder='Enter Your Password' id="exampleInputPassword1" />
+                        <input type="password" value={user.password} name="password" onChange={handleOnChange}  className="input form-control mt-4" required placeholder='Enter Your Password' id="exampleInputPassword1" />
                     </div>
                                             
                             <select className="form-select mt-4 input" required name='room' aria-label="Default select example" onChange={handleOnChange}>
@@ -66,13 +66,13 @@ const Login = () => {
                                 <option value='Guest-Room'>others</option>
                             </select>
                     <div className="mb-3 form-check">
-                        <div className='d-flex justify-content-between'>
-                            <div>
-                            <input type="checkbox" className="form-check-input mx-1 mt-3" id="exampleCheck1" />
-                            <label className="form-check-label checkme mt-3" required for="exampleCheck1">Check me out</label>
+                        <div className='d-flex justify-content-between mt-3'>
+                            <div className=''>
+                            <input type="checkbox" required className="form-check-input" id="exampleCheck1" />
+                            <label className="form-check-label checkme " required for="exampleCheck1">Check me out</label>
                             </div>
                             <div>
-                            <p onClick={()=>Navigate('/')} className="mt-2 pLink">Haven't Account Register Here</p>
+                            <p onClick={()=>Navigate('/')} className="pLink">Haven't Account Register Here</p>
                             </div>
                         </div>
     

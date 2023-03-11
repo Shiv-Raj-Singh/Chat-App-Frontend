@@ -46,25 +46,25 @@ console.log(user);
 
     return (
         <>
-            <div className="JoinPage">
-          <div className="JoinContainer">
+            <div className="JoinPage mt-5">
+          <div className="JoinContainer mt-3 py-3 px-3">
             <p id='hding'>Register Your Account </p>
-             <form className="container mt-5 customForm" id='customForm' onSubmit={handleSubmit}>
+             <form className="container mt-2 customForm" id='customForm' onSubmit={handleSubmit}>
                     {/* <h1 className='hding'>Register Your Account </h1> */}
                     <div className="mb-3 ">
-                        <input type="text" className="form-control"required placeholder='Enter Your Name' name="name" onChange={handleOnChange} id="exampleInputEmail1" aria-describedby="emailHelp"/>
+                        <input type="text" value={user.name} className="form-control input"required placeholder='Enter Your Name' name="name" onChange={handleOnChange} id="exampleInputEmail1" aria-describedby="emailHelp"/>
                     </div>
                     <div className="mb-3 ">
-                        <input type="tel" className="form-control"required placeholder='Enter Your Phone' name="phone" onChange={handleOnChange}id="exampleInputEmail1" aria-describedby="emailHelp"/>
+                        <input type="tel" value={user.phone} className="form-control"required placeholder='Enter Your Phone' name="phone" onChange={handleOnChange}id="exampleInputEmail1" aria-describedby="emailHelp"/>
                     </div>
                     <div className="mb-3 ">
-                        <input type="email" className="form-control" required placeholder='Enter Your Email' name="email" onChange={handleOnChange}id="exampleInputEmail1" aria-describedby="emailHelp"/>
+                        <input type="email" value={user.email} className="form-control" required placeholder='Enter Your Email' name="email" onChange={handleOnChange}id="exampleInputEmail1" aria-describedby="emailHelp"/>
                     </div>
                     <div className="mb-3">
-                        <input type="password" className="form-control" required placeholder='Enter Your Password' name="password" onChange={handleOnChange}  id="exampleInputPassword1" />
+                        <input type="password"  value={user.password} className="form-control" required placeholder='Enter Your Password' name="password" onChange={handleOnChange}  id="exampleInputPassword1" />
                     </div>
                     <div className="mb-3">
-                        <input type="password" className="form-control" required placeholder='Confirm Your Password' 
+                        <input type="password" value={user.cPassword} className="form-control" required placeholder='Confirm Your Password' 
                         name="cPassword" onChange={handleOnChange} id="exampleInputPassword1" />
                     </div>
                     <div className="mb-3 form-check">
