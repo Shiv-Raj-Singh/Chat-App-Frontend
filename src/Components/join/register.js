@@ -46,24 +46,24 @@ console.log(user);
 
     return (
         <>
-            <div className="JoinPage mt-5 pt-3">
+            <div className="JoinPage mt-1 pt-3">
           <div className="JoinContainer mt-3 py-3 px-3 pt-3">
             <p id='hding'>Register Your Account </p>
-             <form className="container mt-2 customForm pt-5" id='customForm' onSubmit={handleSubmit}>
+             <form className="container mt-2 customForm pt-1" id='customForm' onSubmit={handleSubmit}>
                     {/* <h1 className='hding'>Register Your Account </h1> */}
-                    <div className="mb-3 ">
+                    <div className="mb-2 mt-4 ">
                         <input type="text" value={user.name} className="form-control input"required placeholder='Enter Your Name' name="name" onChange={handleOnChange} id="exampleInputEmail1" aria-describedby="emailHelp"/>
                     </div>
-                    <div className="mb-3 ">
+                    <div className="mb-2 ">
                         <input type="tel" value={user.phone} className="form-control"required placeholder='Enter Your Phone' name="phone" onChange={handleOnChange}id="exampleInputEmail1" aria-describedby="emailHelp"/>
                     </div>
-                    <div className="mb-3 ">
+                    <div className="mb-2 ">
                         <input type="email" value={user.email} className="form-control" required placeholder='Enter Your Email' name="email" onChange={handleOnChange}id="exampleInputEmail1" aria-describedby="emailHelp"/>
                     </div>
-                    <div className="mb-3">
+                    <div className="mb-2">
                         <input type="password"  value={user.password} className="form-control" required placeholder='Enter Your Password' name="password" onChange={handleOnChange}  id="exampleInputPassword1" />
                     </div>
-                    <div className="mb-3">
+                    <div className="mb-2">
                         <input type="password" value={user.cPassword} className="form-control" required placeholder='Confirm Your Password' 
                         name="cPassword" onChange={handleOnChange} id="exampleInputPassword1" />
                     </div>
@@ -78,7 +78,7 @@ console.log(user);
                             </div>
                         </div>          
                     </div>
-                <button type="submit" className="btn btn-primary btn1" >Submit</button>
+                <button type="submit" className="btn btn-primary" id='btn1' >Submit</button>
             </form>
             </div>
         

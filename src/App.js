@@ -6,6 +6,9 @@ import LoginPage from "./pages/login";
 import Nopage from "./pages/Nopage";
 import About from "./Components/About";
 import ChatPage from "./pages/chatroom";
+import ForgetPass from "./pages/ForgetPass";
+import ResetPassword from "./Components/ResetPass";
+
 
 
 function App() {
@@ -16,6 +19,8 @@ function App() {
         <Route  path="/login"  element={<LoginPage/>}/>
         <Route  path="/chat/:room"  element={<ChatPage/>}/>
         <Route  path="/About"  element={<About/>}/>
+        <Route  path="/forget-password"  element={<ForgetPass/>}/>
+        <Route  path="/reset/password"  element={<ResetPassword/>}/>
         <Route  path="*"  element={<Nopage/>}/>
 
     </Routes>

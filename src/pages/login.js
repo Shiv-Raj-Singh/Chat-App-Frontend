@@ -5,8 +5,8 @@ import Login from "../Components/join/login"
 export default function LoginPage(){
     return (
         <>
-        <Login/>
-        <BackgroundAnimate />
+        <Login />
+        {/* <BackgroundAnimate />? */}
         </>
     )
 }

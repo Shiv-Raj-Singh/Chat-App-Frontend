@@ -15,6 +15,7 @@ const Login = () => {
         Navigate(`/chat/${user.room}` , {state : {...data , room : user.room}}  )
     }
     const [user, setUser] = useState(dummyUser);
+    const [input, setInput] = useState('');
 
     const handleOnChange = (e)=>{
         console.log(e);
@@ -42,7 +43,7 @@ const Login = () => {
 
 
     return (
-        <div className="JoinPage mt-5 pt-3">
+        <div className="JoinPage mt-1 pt-3">
           <div className="JoinContainer mt-3 pt-2">
             <p id='hding'>Login Your Account </p>
              <form className="container customForm mt-2" onSubmit={handleSubmit} method={"POST"} >
@@ -58,11 +59,11 @@ const Login = () => {
                             <select className="form-select mt-4 input" required name='room' aria-label="Default select example" onChange={handleOnChange}>
                                 <option selected>Choose Your Fav Chat Room </option>
                                 <option value='study'>Study</option>
-                                <option value="gaming">Medical</option>
+                                <option value="Medical">Medical</option>
                                 <option value='Sports'>Sports</option>
-                                <option value='Coding'>Software</option>
-                                <option value='music'>music</option>
-                                <option value='movies'>movies</option>
+                                <option value='Software'>Software</option>
+                                <option value='Entertainment'>Entertainment</option>
+                                <option value={input}> <input type="text" value={input} placeholder={'enter your custom room'} onChange={(e)=>setInput(e.target.value)} /> </option>
                                 <option value='Guest-Room'>others</option>
                             </select>
                     <div className="mb-3 form-check">
@@ -77,7 +78,14 @@ const Login = () => {
                         </div>
     
                     </div>
-                <button type="submit" className="btn btn-primary btn1">Submit</button>
+                <button type="submit" className="btn btn-primary"id='btn1' >Submit</button>
+                <small  className='link' onClick={()=>Navigate('/forget-password')} 
+                style = {
+                    {
+                        fontSize : "20px"
+                    }
+                }
+                >forget Password  </small>
             </form>
             </div>
             <ToastContainer />

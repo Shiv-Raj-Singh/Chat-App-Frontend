@@ -3,9 +3,13 @@
   box-sizing: border-box;
 }
 
+body{
+  background-color: rgb(3, 58, 77);
+  height: 08vh;  
+}
 .JoinPage{
   /* border: 2px solid rgb(106, 216, 15);    */
-  background-color: rgb(139, 139, 136);
+  /* background-color: rgb(139, 139, 136); */
   width: 69vw;
   height: 90vh;
   margin: auto;
@@ -15,11 +19,11 @@
   width: 66vw;
   height: 80vh;
   margin:  auto;
-  background-color: rgb(85, 121, 148);
+  /* background-color: rgb(85, 121, 148); */
 }
 
 #hding{
-  color: darkgreen;
+  color: rgb(223, 230, 223);
   margin: auto;
   /* margin-bottom: 0.5%; */
   text-align: center;
@@ -30,20 +34,22 @@
 }
 
 #hding:hover{
-  color: rgb(15, 15, 12);
-  font-size:  1.7vw;
+  color: rgb(108, 230, 8);
+  font-size:  1.9vw;
   font-weight: 900;
   font-weight: 300;
   font-family: 'Gill Sans', 'Gill Sans MT', 'Trebuchet MS', sans-serif Arial, Helvetica, sans-serif;
 }
 
 .customForm{
-  padding: 2%;
+  /* padding: %; */
+  overflow: hidden;
   width: 56vw;
-  height: 87%;
-  /* border: 2px solid black; */
+  height: 70vh;
+  border-radius: 5%;
   box-shadow: 0 , 10px , 20px, 0 ;
-  background-color: rgba(88, 75, 75, 0.788);
+  background-color: rgba(230, 245, 18, 0.788);
+  /* border: 2px solid blue; */
 }
 
 .checkme{
@@ -52,16 +58,22 @@
   font-style: italic;
 }
 
-.btn1{
-  color: black;
+ #btn1{
+  color: rgb(18, 34, 14);
   display: flex;
   justify-content: center;
-  background-color: rgb(147, 194, 93);
+  background-color: rgb(55, 121, 24);
   text-align: center;
   font-size: 1.3rem;
-  width: 18vw;
+  width: 30vw;
   padding: 0.5% , 2%;
   margin: auto;
+} 
+
+#btn1:hover{
+  color: antiquewhite;
+  background-color: blueviolet;
+  
 }
 input:focus{
   color: rgb(13, 14, 12);
@@ -105,6 +117,8 @@ input:focus{
   
   .customForm{
     width: 78vw;
+    height: 60vh;
+    padding: 5%;
     /* text-align: center; */
     box-shadow: 0 , 10px , 20px, 0 ;
   }
@@ -113,14 +127,14 @@ input:focus{
     width: 90vw;
     height: 80vh;
     margin:  auto;
-    background-color: rgb(85, 121, 148);
+    /* background-color: rgb(85, 121, 148); */
   }
 
   .JoinPage{
     width: 98vw;
     height: 85vh;
     margin:  auto;
-    background-color: rgb(21, 226, 226);
+    /* background-color: rgb(21, 226, 226); */
   }
   .form-check{
     display: flex ;
@@ -132,17 +146,7 @@ input:focus{
     width: 100%; */
   }
 
-  .btn1{
-    color: black;
-    display: flex;
-    justify-content: center;
-    background-color: rgb(147, 194, 93);
-    text-align: center;
-    font-size: 1.3rem;
-    width: 25vw;
-    padding: 0.5% , 2%;
-    margin: auto;
-  }
+
   input:focus{
     color: rgb(13, 14, 12);
     background-color: rgb(252, 186, 107);
@@ -172,13 +176,14 @@ input:focus{
   }
   .JoinContainer{
     width: 98%;
+    margin-top: 20vh;
   }
   .customForm{
-    height: 90%;
+    height: 60%;
     width: 100%;
     padding-right: 2%;
     padding-bottom: 3%;
-    background-color: rgba(70, 53, 85, 0.589);
+    background-color: rgba(153, 153, 10, 0.877);
   }
   .JoinPage{
     height: 100%;

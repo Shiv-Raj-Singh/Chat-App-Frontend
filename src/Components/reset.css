@@ -1,0 +1,114 @@
+*{
+    margin : 0 ;
+    padding : 0 ;
+    box-sizing: border-box;
+}
+
+.reset{
+    background-color: rgb(78, 64, 60);
+    width: 100%;
+    margin: auto;
+    height: 100vh;
+    /* text-align: center; */
+}
+
+.form{
+    margin: auto;
+    border-radius: 2%;
+    background-color: lightgrey;
+    width: 60vw;
+    height: 40vh;
+}
+
+.btn1{
+    color: black;
+    display: flex;
+    justify-content: center;
+    background-color: rgb(190, 128, 13);
+    text-align: center;
+    font-size: 1.3rem;
+    width: 18vw;
+    padding: 0.5% , 2%; 
+    margin: auto;
+  }
+
+  .hding{
+    color: rgb(97, 194, 18);
+    font-size: 1.2em;
+    font-style: oblique;
+    font-weight: 700;
+    text-align: center;
+  }
+
+  .hding:hover{
+    color: rgb(61, 87, 235);
+    font-size: 1.4em;
+    font-style: oblique;
+    font-weight: 700;
+    text-align: center;
+  }
+
+  .link{
+    color: rgba(0, 0, 255, 0.74);
+    margin-left: 20px;
+    margin-top: 10px;
+    /* text-decoration: underline; */
+  }
+  .link:hover{ 
+    color: blue;
+    margin-left: 20px;
+    font-size: 15px;
+    text-decoration: underline;
+  }
+  
+/*  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^     Reset Password Page   ****************************************************** */
+
+.resetPass{
+    background-color: rgb(78, 82, 52);
+    width: 100%;
+    margin: auto;
+    height: 100vh;
+}
+
+.formReset{
+    margin: auto;
+    border-radius: 4%;
+    background-color: rgb(205, 221, 111);
+    width: 60vw;
+    height: 60vh;
+}
+
+
+  @media(max-width: 460px) {
+
+    .hding{
+        color: rgb(7, 7, 6);
+        font-size: 1.2em;
+        font-style: oblique;
+        font-weight: 700;
+        text-align: center;
+      }
+
+   .form{
+    margin: auto;
+    background-color: lightgrey;
+    width: 90vw;
+    height: 40vh;
+}
+
+
+.resetPass{
+    background-color: rgb(106, 107, 95);
+    width: 100%;
+    margin: auto;
+    height: 100vh;
+}
+.formReset{
+    margin: auto;
+    margin-top: 15vh;
+    background-color: rgb(93, 173, 76);
+    width: 90vw;
+    height: 40vh;
+}
+
+  }

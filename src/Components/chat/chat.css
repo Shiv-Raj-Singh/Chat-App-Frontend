@@ -12,23 +12,24 @@
     height: 70vh;
     width: 80vw;
     margin: auto;
+    /* border: 2px solid black; */
     overflow: scroll;
     /* background: ; */
-    background-image: linear-gradient(to right, rgba(255, 0, 0, 0.24),rgba(255, 166, 0, 0.301),rgba(255, 255, 0, 0.301),rgba(0, 128, 0, 0.137),rgba(0, 0, 255, 0.418),rgba(76, 0, 130, 0.377),rgba(238, 130, 238, 0.37));
+    /* background-image: linear-gradient(to right, rgba(255, 0, 0, 0.24),rgba(255, 166, 0, 0.301),rgba(255, 255, 0, 0.301),rgba(0, 128, 0, 0.137),rgba(0, 0, 255, 0.418),rgba(76, 0, 130, 0.377),rgba(238, 130, 238, 0.37)); */
 } 
 
-.hding{
-    color: rgb(220, 245, 129);
-    margin: 1vh 2vw;
-    font-size: 2rem;
+#chatHeading{
+    color: rgb(217, 238, 143);
+    /* margin: 1vh 2vw; */
+    font-size: 1.5rem;
     font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
 }
 #msg{
   width: max-content;
   height: max-content;
   max-width: 100%;
-  font-size: 1em;
-  background-color: silver;
+  font-size: 0.6em;
+  background-color: rgb(117, 110, 110);
 }
 
 .msgName{
@@ -40,7 +41,7 @@
 .msgTime{
   font-size: 60%;
   /* width: 100%; */
-  color: rgb(184, 162, 204);
+  color: rgb(124, 6, 235);
 }
 .msg{
   font-size: 1.5em;
@@ -50,32 +51,40 @@
   /* width: auto; */
 }
 .msgType{
-  width: 90%;
-  margin-left: 10%;
-  margin-right: 10%;
+  width: 80vw;
+  height: 6vh;
+  margin: auto;
+
+  /* margin-left: 10%;
+  margin-right: 10%; */
 }
-.hding:hover{
-    color: rgb(160, 157, 170);
+#chatHeading:hover{
+    color: rgb(118, 197, 15);
     font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
     font-weight: 700;
     margin: 1vh 0;
     font-size: 5.1vh;
 }
 
+
+
 @media (max-width:700px){
 
-  .hding{
-    color: chartreuse;
-    font-size: 1em;
-  }
-
+  
+#chatHeading{
+  color: rgb(192, 243, 8);
+  letter-spacing: 10%;
+  /* margin: 1vh 2vw; */
+  font-size: 0.7rem;
+  font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+}
 
     .box{
         width: 89vw;
         height: 70vh;
         margin: auto;
         /* background: ; */
-        background-image: linear-gradient(to right, rgba(255, 0, 0, 0.24),rgba(255, 166, 0, 0.301),rgba(255, 255, 0, 0.301),rgba(0, 128, 0, 0.137),rgba(0, 0, 255, 0.418),rgba(76, 0, 130, 0.377),rgba(238, 130, 238, 0.37));
+        /* background-image: linear-gradient(to right, rgba(255, 0, 0, 0.24),rgba(255, 166, 0, 0.301),rgba(255, 255, 0, 0.301),rgba(0, 128, 0, 0.137),rgba(0, 0, 255, 0.418),rgba(76, 0, 130, 0.377),rgba(238, 130, 238, 0.37)); */
         overflow: scroll;
     }
 
@@ -83,16 +92,21 @@
       width: max-content;
       height: max-content;
       max-width: 100%;
-      font-size: 1em;
-      background-color: rgb(105, 181, 248);
+      font-size: 0.5em;
+      background-color: rgb(153, 192, 103);
     }
 
 
     .msgName{
       font-size: 70%;
       /* width: 100%; */
-      color: blueviolet;
+      color: rgb(14, 2, 26);
       display: block;
+    }
+    .msgType{
+      /* border: 2px solid yellow; */
+      margin: auto;
+      width: 87vw;
     }
     .msgTime{
       font-size: 60%;
