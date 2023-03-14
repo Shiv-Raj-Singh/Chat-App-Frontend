@@ -20,7 +20,7 @@ function App() {
         <Route  path="/chat/:room"  element={<ChatPage/>}/>
         <Route  path="/About"  element={<About/>}/>
         <Route  path="/forget-password"  element={<ForgetPass/>}/>
-        <Route  path="/reset/password"  element={<ResetPassword/>}/>
+        <Route  path="/reset-password/:id"  element={<ResetPassword/>}/>
         <Route  path="*"  element={<Nopage/>}/>
 
     </Routes>

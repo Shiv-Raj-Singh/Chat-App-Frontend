@@ -16,11 +16,11 @@ export default function ForgetPassword(){
         try {
             // console.log(email);
             // const response = await axios.post("https://chatting-app1.onrender.com/forgot-password" , {email : email})
-            const response = await axios.post("http://localhost:5000/forgot-password" , {email : email})
-            // const data = await response.data
-            Nav('/')
+            const response = await axios.post("https://chatting-app1.onrender.com/forgotPassword" , {email : email})
+            const data = await response.data
+            // Nav('/')
             // console.log(data);
-            // data.status&&toast.success(data.message , {position : 'top-center'}) 
+            data.status&&toast.success(data.message , {position : 'top-center'}) 
             // data.status && clickHandler(data.data)
             // data.status ? alert(data.message) : alert(data.message) 
             
