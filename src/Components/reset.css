@@ -41,8 +41,7 @@
   }
 
   .hding:hover{
-    color: rgb(61, 87, 235);
-    font-size: 1.4em;
+    color: rgb(61, 55, 47);
     font-style: oblique;
     font-weight: 700;
     text-align: center;
@@ -96,14 +95,6 @@
     height: 40vh;
 }
 
-.hding:hover{
-    color: rgb(61, 87, 235);
-    font-size: 1em;
-    font-style: oblique;
-    font-weight: 700;
-    text-align: center;
-  }
-
 .resetPass{
     background-color: rgb(106, 107, 95);
     width: 100%;
@@ -113,8 +104,12 @@
 .formReset{
     margin: auto;
     margin-top: 15vh;
-    background-color: rgb(228, 175, 61);
-    width: 90vw;
-    height: 50vh;
+    background-color: rgb(112, 102, 81);
+    width: 97vw;
+    height: 60vh;
+    
+}
+.inp1{
+  width: 110%;
 }
 }

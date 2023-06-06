@@ -34,8 +34,10 @@ body{
 }
 
 #hding:hover{
-  color: rgb(108, 230, 8);
-  font-size:  1.9vw;
+  transform: scale(1.07);
+  width: max-content;
+  transition: 1s ease-out ;
+  color: rgb(243, 186, 117);
   font-weight: 900;
   font-weight: 300;
   font-family: 'Gill Sans', 'Gill Sans MT', 'Trebuchet MS', sans-serif Arial, Helvetica, sans-serif;
@@ -46,9 +48,9 @@ body{
   overflow: hidden;
   width: 56vw;
   height: 70vh;
-  border-radius: 5%;
+  border-radius: 1%;
   box-shadow: 0 , 10px , 20px, 0 ;
-  background-color: rgba(230, 245, 18, 0.788);
+  /* background-color: rgba(230, 245, 18, 0.788); */
   /* border: 2px solid blue; */
 }
 
@@ -84,15 +86,15 @@ input:focus{
 }
 
 .pLink{
-  color: rgb(35, 7, 196);
+  color: rgb(211, 209, 219);
   font-weight: 700;
 }
 
 .pLink:hover{
-  color: rgb(8, 8, 253);
-  font-weight: 500;
+  color: aqua;
+  /* font-weight: 500; */
   text-decoration: underline;
-  background-color: aqua;
+  /* background-color: aqua; */
 
 }
 
@@ -100,22 +102,14 @@ input:focus{
 
 
 @media (max-width:700px) {
-  #hding{
-    color: rgb(18, 18, 20);
-    font-style: italic;
-    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
-    font-size: 1.5em;
-    /* margin-top: 20vh; */
-  }
-  #hding:hover{
-    color: rgb(62, 85, 8);
-    font-size:  1.7rem;
+  #hding:hover{    
     font-weight: 900;
     font-style: normal;
     font-family: 'Gill Sans', 'Gill Sans MT', 'Trebuchet MS', sans-serif Arial, Helvetica, sans-serif;
   }
   
   .customForm{
+    box-shadow: 0 1px 0px 0px var(--white);
     width: 78vw;
     height: 66vh;
     padding: 2%;
@@ -153,21 +147,10 @@ input:focus{
     font-size: 1.2em;
     font-weight: 600;
     font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;  
-  }
-  
-  .pLink{
-    color: rgb(111, 86, 250);
-  }
-  
-  .pLink:hover{
-    color: rgb(8, 8, 253);
-    font-weight: 500;
-    text-decoration: underline;
-    background-color: aqua;
-  
-  }
+  }  
   
 }
+
 @media (max-width: 450px) {
   *{
     padding: 0;
@@ -178,22 +161,34 @@ input:focus{
     width: 98%;
     margin-top: 20vh;
   }
+  .error{
+    color: rgb(63, 36, 36);
+    font-size: 0.8em;    
+  }
   .customForm{
     height: 60vh;
-    width: 97%;
+    width: 99%;
     padding-right: 2%;
-    padding-bottom: 3%;
-    background-color: rgba(235, 235, 48, 0.877);
+    padding-bottom: 3%;    
+    background-color: rgb(146, 146, 95);
+  }
+  .customForm-register{
+    height: max-content;
+    width: 99%;
+    padding-right: 2%;
+    padding-bottom: 3%;    
+    background-color: rgb(146, 146, 95);
   }
   .JoinPage{
     height: 100%;
     width: 100%;
     margin: 1%;
     padding-bottom: 2%;
+    
   }
 
   .pLink{
-    color: rgb(45, 11, 238);
+    color: rgb(242, 240, 250);
     display: block;
     font-size: 14px;
   }
