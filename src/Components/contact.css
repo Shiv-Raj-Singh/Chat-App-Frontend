@@ -1,0 +1,117 @@
+/* contact.css */
+.contact-page {
+    background: linear-gradient(135deg, #bcbcbc, #ffc3a046); /* Gradient background */
+    min-height: 100vh;
+    padding-top: 50px;
+    padding-bottom: 50px;
+  }
+  
+  .about-me {
+    background-color: #77a8f1b1; /* Light background for About Me section */
+    border-left: 4px solid #e6746a; /* Accent color */
+    padding: 30px;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+  }
+  
+  .about-me h2 {
+    font-size: 2.5rem;
+    color: #01040a;
+  }
+  
+  .contact-form-section {
+    background-color: #88e9e1a8;
+    border-left: 4px solid #007bff;
+    padding: 30px;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+  }
+  
+  .contact-form-section h2 {
+    font-size: 2.5rem;
+    color: #343a40;
+  }
+  
+  .contact-form label {
+    font-size: 1.1rem;
+    color: #343a40;
+  }
+  
+  .contact-form input, .contact-form textarea {
+    font-size: 1.1rem;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    padding: 10px;
+    margin-bottom: 15px;
+    width: 100%;
+  }
+  
+  .contact-form button {
+    background-color: #FF6F61;
+    color: #fff;
+    font-size: 1.2rem;
+    padding: 12px 20px;
+    border-radius: 5px;
+    transition: background-color 0.3s ease;
+    width: 100%;
+  }
+  
+  .contact-form button:hover {
+    background-color: #e55d4b;
+  }
+  
+  .response-message {
+    font-size: 1.2rem;
+    color: #8328a7;
+  }
+  
+  .contact-footer {
+    background-color: #2e3236;
+    padding: 40px 20px;
+  }
+  
+  .contact-footer h2 {
+    font-size: 2rem;
+    font-weight: bold;
+    color: #fff;
+  }
+  
+  .contact-footer .contact-info p {
+    font-size: 1.2rem;
+    color: #fff;
+  }
+  
+  .contact-footer .social-links a {
+    font-size: 1.5rem;
+    color: #fff;
+    transition: color 0.3s ease;
+  }
+  
+  .contact-footer .social-links a:hover {
+    color: #FF6F61;
+  }
+  
+  .portfolio-link {
+    font-size: 1.2rem;
+    color: #fff;
+  }
+  
+  .portfolio-link a {
+    color: #FF6F61;
+    font-weight: bold;
+  }
+  
+  .portfolio-link a:hover {
+    text-decoration: underline;
+  }
+  
+  @media (max-width: 768px) {
+    .contact-form button {
+      width: 100%;
+    }
+  
+    .contact-footer .contact-info p {
+      font-size: 1rem;
+    }
+  }
+  

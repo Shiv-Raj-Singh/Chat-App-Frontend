@@ -1,199 +1,145 @@
-*{
-  margin: 0%;
-  box-sizing: border-box;
-}
-
-body{
-  background-color: rgb(3, 58, 77);
-  height: 08vh;  
-}
-.JoinPage{
-  /* border: 2px solid rgb(106, 216, 15);    */
-  /* background-color: rgb(139, 139, 136); */
-  width: 69vw;
-  height: 90vh;
-  margin: auto;
-}
-.JoinContainer{
-  /* border: 2px solid black; */
-  width: 66vw;
-  height: 80vh;
-  margin:  auto;
-  /* background-color: rgb(85, 121, 148); */
-}
-
-#hding{
-  color: rgb(223, 230, 223);
-  margin: auto;
-  /* margin-bottom: 0.5%; */
-  text-align: center;
-  font-size:  1.5rem;
-  font-style: normal;
-  font-weight: 900;
-  font-family: 'Gill Sans', 'Gill Sans MT', 'Trebuchet MS', sans-serif Arial, Helvetica, sans-serif;
-}
-
-#hding:hover{
-  transform: scale(1.07);
-  width: max-content;
-  transition: 1s ease-out ;
-  color: rgb(243, 186, 117);
-  font-weight: 900;
-  font-weight: 300;
-  font-family: 'Gill Sans', 'Gill Sans MT', 'Trebuchet MS', sans-serif Arial, Helvetica, sans-serif;
-}
-
-.customForm{
-  /* padding: %; */
-  overflow: hidden;
-  width: 56vw;
-  height: 70vh;
-  border-radius: 1%;
-  box-shadow: 0 , 10px , 20px, 0 ;
-  /* background-color: rgba(230, 245, 18, 0.788); */
-  /* border: 2px solid blue; */
-}
-
-.checkme{
-  color: rgb(77, 20, 3);
-  font-weight: 700;
-  font-style: italic;
-}
-
- #btn1{
-  color: rgb(18, 34, 14);
+/* General Page Styles */
+.loginPage {
   display: flex;
   justify-content: center;
-  background-color: rgb(55, 121, 24);
+  align-items: center;
+  min-height: 100vh;
+  background: #f0f2f5;
+  font-family: 'Arial', sans-serif;
+  padding: 20px;
+  flex-direction: column; /* Added to keep elements stacked */
+}
+
+.loginContainer {
+  background-color: #ffffff;
+  padding: 40px;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  max-width: 420px;
+  transition: all 0.3s ease;
+  margin-top: 20px; /* Space between navbar and form */
+}
+
+.loginContainer:hover {
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+}
+
+.loginTitle {
+  font-size: 28px;
+  font-weight: bold;
   text-align: center;
-  font-size: 1.3rem;
-  width: 30vw;
-  padding: 0.5% , 2%;
-  margin: auto;
-} 
-
-#btn1:hover{
-  color: antiquewhite;
-  background-color: blueviolet;
-  
-}
-input:focus{
-  color: rgb(13, 14, 12);
-  background-color: rgb(75, 60, 43);
-  font-size: 1.2em;
-  font-weight: 600;
-  font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;  
+  margin-bottom: 25px;
+  color: #333;
 }
 
-.pLink{
-  color: rgb(211, 209, 219);
-  font-weight: 700;
+/* Form Styles */
+.loginForm {
+  display: flex;
+  flex-direction: column;
 }
 
-.pLink:hover{
-  color: aqua;
-  /* font-weight: 500; */
+.inputGroup {
+  margin-bottom: 15px;
+}
+
+.inputField {
+  width: 100%;
+  padding: 14px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  font-size: 16px;
+  color: #333;
+  outline: none;
+  transition: border-color 0.3s ease;
+}
+
+.inputField:focus {
+  border-color: #007bff;
+}
+
+.errorMessage {
+  color: #e74c3c;
+  font-size: 12px;
+  margin-top: 5px;
+}
+
+/* Check Box and Links */
+.checkWrapper {
+  display: flex;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.checkBox {
+  margin-right: 8px;
+}
+
+.checkLabel {
+  font-size: 14px;
+  color: #333;
+}
+
+.actionLinks {
+  display: flex;
+  justify-content: space-between;
+  font-size: 14px;
+  margin-bottom: 20px;
+}
+
+.linkText {
+  color: #007bff;
+  cursor: pointer;
+}
+
+.linkText:hover {
   text-decoration: underline;
-  /* background-color: aqua; */
-
 }
 
-/* $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$ */
-
-
-@media (max-width:700px) {
-  #hding:hover{    
-    font-weight: 900;
-    font-style: normal;
-    font-family: 'Gill Sans', 'Gill Sans MT', 'Trebuchet MS', sans-serif Arial, Helvetica, sans-serif;
-  }
-  
-  .customForm{
-    box-shadow: 0 1px 0px 0px var(--white);
-    width: 78vw;
-    height: 66vh;
-    padding: 2%;
-    /* text-align: center; */
-    box-shadow: 0 , 10px , 20px, 0 ;
-  }
-  .JoinContainer{
-    /* border: 2px solid black; */
-    width: 90vw;
-    height: 80vh;
-    margin:  auto;
-    /* background-color: rgb(85, 121, 148); */
-  }
-
-  .JoinPage{
-    width: 98vw;
-    height: 85vh;
-    margin:  auto;
-    /* background-color: rgb(21, 226, 226); */
-  }
-  .form-check{
-    display: flex ;
-    flex-direction:column;
-    justify-content: space-around;
-    flex-wrap: wrap;
-    /* align-items: center;
-    width: 100%;
-    width: 100%; */
-  }
-
-
-  input:focus{
-    color: rgb(13, 14, 12);
-    background-color: rgb(252, 186, 107);
-    font-size: 1.2em;
-    font-weight: 600;
-    font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;  
-  }  
-  
+.forgetPassword {
+  text-align: right;
 }
 
-@media (max-width: 450px) {
-  *{
-    padding: 0;
-    margin: 0;
-    box-sizing: border-box;
-  }
-  .JoinContainer{
-    width: 98%;
-    margin-top: 20vh;
-  }
-  .error{
-    color: rgb(63, 36, 36);
-    font-size: 0.8em;    
-  }
-  .customForm{
-    height: 60vh;
-    width: 99%;
-    padding-right: 2%;
-    padding-bottom: 3%;    
-    background-color: rgb(146, 146, 95);
-  }
-  .customForm-register{
-    height: max-content;
-    width: 99%;
-    padding-right: 2%;
-    padding-bottom: 3%;    
-    background-color: rgb(146, 146, 95);
-  }
-  .JoinPage{
-    height: 100%;
-    width: 100%;
-    margin: 1%;
-    padding-bottom: 2%;
-    
+/* Submit Button */
+.submitButton {
+  padding: 14px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  margin-top: 10px;
+}
+
+.submitButton:hover {
+  background-color: #0056b3;
+}
+
+.submitButton:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+}
+
+/* Mobile Responsiveness */
+@media (max-width: 768px) {
+  .loginContainer {
+    padding: 30px;
+    width: 90%;
+    margin-top: 20px; /* Ensure there's space for mobile view */
   }
 
-  .pLink{
-    color: rgb(242, 240, 250);
-    display: block;
+  .loginTitle {
+    font-size: 24px;
+  }
+
+  .inputField {
+    padding: 12px;
+  }
+
+  .submitButton {
     font-size: 14px;
-  }
-  .footer{
-    flex-direction: column;
-    align-items: center;
+    padding: 12px;
   }
 }
