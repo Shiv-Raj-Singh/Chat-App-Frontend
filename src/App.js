@@ -12,6 +12,7 @@ import ResetPassword from "./Components/ResetPass";
 import Navbar from "./Components/Navbar";
 import 'bootstrap/dist/js/bootstrap.bundle.min.js';  // For Bootstrap JS
 import ContactPage from "./pages/Contact";
+import Profile from "./Components/Profile";
 
 
 
@@ -29,6 +30,7 @@ function App() {
         <Route  path="/chat"  element={<ChatPage/>}/>
         <Route  path="/About"  element={<About/>}/>
         <Route  path="/contact"  element={<ContactPage/>}/>
+        <Route  path="/profile"  element={<Profile/>}/>
         <Route  path="/forget-password"  element={<ForgetPass/>}/>
         <Route  path="/reset-password/:id"  element={<ResetPassword/>}/>
         <Route  path="*"  element={<Nopage/>}/>

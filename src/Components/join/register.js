@@ -10,6 +10,7 @@ const dummyUser = {
   name: "",
   phone: "",
   email: "",
+  gender: "",
   password: "",
   cPassword: "",
 };
@@ -17,6 +18,7 @@ const errors = {
   name: "",
   phone: null,
   email: null,
+  gender: null,
   password: null,
   cPassword: null,
 };
@@ -52,9 +54,10 @@ const Register = () => {
       const userData = data.data;
       localStorage.data = JSON.stringify(userData);
       localStorage.token = userData.token;
+
+      if (data.status) clickHandler();
       // Reload the page after setting the data
       window.location.reload();
-      if (data.status) clickHandler();
       toast.success("Submitted Successfully!", {
         theme: "light",
         position: "top-center",
@@ -130,6 +133,24 @@ const Register = () => {
               />
               {error.email && (
                 <span className="text-danger small">{error.email}</span>
+              )}
+            </div>
+            <div className="mb-3">
+              <select
+                value={user.gender}
+                className="form-select"
+                required
+                name="gender"
+                onChange={handleOnChange}
+              >
+                <option value="" disabled>
+                  Select Gender
+                </option>
+                <option value="male">Male</option>
+                <option value="female">Female</option>
+              </select>
+              {error.gender && (
+                <span className="text-danger small">{error.gender}</span>
               )}
             </div>
             <div className="mb-3">

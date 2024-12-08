@@ -36,9 +36,8 @@ const Login = () => {
       localStorage.data = JSON.stringify(userData);
       localStorage.token = userData.token;
       // Reload the page after setting the data
-      window.location.reload();
-
       Navigate("/");
+      window.location.reload();
       //   data.status && clickHandler(data.data);
       btn.current.removeAttribute("disabled");
     } catch (err) {

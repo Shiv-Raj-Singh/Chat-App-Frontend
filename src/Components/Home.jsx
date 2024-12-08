@@ -8,7 +8,7 @@ const HomePage = () => {
   const [error, setError] = useState(null);
   const [language, setLanguage] = useState("en"); // Default to English
   const [noDataFound, setNoDataFound] = useState(false); // Track if no data is found
-
+  let oldLanguage;
   const API_KEY = "127c17c8a5f643aab718e5985a67a4fb"; // Replace with your News API key
   const API_URL = "https://newsapi.org/v2/everything"; // Base URL for News API to get all news
 
@@ -20,7 +20,12 @@ const HomePage = () => {
       try {
         // Fetch news based on search query (if any) and language
         let response;
-        if (localStorage.getItem("response") && !searchQuery.trim().length) {
+        if (
+          localStorage.getItem("response") &&
+          !searchQuery.trim().length &&
+          oldLanguage &&
+          oldLanguage !== language
+        ) {
           response = JSON.parse(localStorage.getItem("response"));
           console.log("News API response from localstorage..:");
         } else {
@@ -61,6 +66,7 @@ const HomePage = () => {
 
   // Toggle between English and Hindi language
   const handleLanguageToggle = () => {
+    oldLanguage = language;
     setLanguage(language === "en" ? "hi" : "en"); // Toggle between English (en) and Hindi (hi)
   };
 
