@@ -9,8 +9,9 @@ const HomePage = () => {
   const [language, setLanguage] = useState("en"); // Default to English
   const [noDataFound, setNoDataFound] = useState(false); // Track if no data is found
   let oldLanguage;
-  const API_KEY = "127c17c8a5f643aab718e5985a67a4fb"; // Replace with your News API key
-  const API_URL = "https://newsapi.org/v2/everything"; // Base URL for News API to get all news
+  // const API_KEY = "127c17c8a5f643aab718e5985a67a4fb"; // Replace with your News API key
+  // const API_URL = "https://newsapi.org/v2/everything"; // Base URL for News API to get all news
+  const API_URL = "https://chatting-app1.onrender.com/home"; // Base URL for News API to get all news
 
   // Fetching news when the component mounts or when the search query or language changes
   useEffect(() => {
@@ -31,10 +32,8 @@ const HomePage = () => {
         } else {
           response = await axios.get(API_URL, {
             params: {
-              apiKey: API_KEY,
               q: searchQuery || "latest", // Search query entered by the user or default to 'latest'
               language: language, // Language parameter
-              sortBy: "relevancy", // Sort by relevance (you can also use 'popularity' or 'publishedAt')
             },
           });
           localStorage.setItem("response", JSON.stringify(response));
@@ -43,7 +42,7 @@ const HomePage = () => {
         console.log("News API response:", response.data); // Log the response for debugging
 
         // Filter out articles that don't have valid images or content
-        const validArticles = response.data.articles.filter(
+        const validArticles = response.data?.data?.articles.filter(
           (article) =>
             article.urlToImage && article.title && article.description
         );
@@ -56,7 +55,7 @@ const HomePage = () => {
         setLoading(false);
       } catch (err) {
         console.error("Error fetching news:", err);
-        setError("Failed to fetch news");
+        !news.length && setError("Failed to fetch news");
         setLoading(false);
       }
     };

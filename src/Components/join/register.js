@@ -47,7 +47,7 @@ const Register = () => {
     try {
       const response = await axios.post(
         // "https://chatting-app1.onrender.com/register"
-        "http://localhost:5000/register",
+        "https://chatting-app1.onrender.com/register",
         user
       );
       const data = await response.data;
