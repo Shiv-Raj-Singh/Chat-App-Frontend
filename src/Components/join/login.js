@@ -27,7 +27,7 @@ const Login = () => {
     try {
       const response = await axios.post(
         // 'https://chatting-app1.onrender.com/login',
-        "http://localhost:5000/login",
+        "https://chatting-app1.onrender.com/login",
         user
       );
       const data = await response.data;

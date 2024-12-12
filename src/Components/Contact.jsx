@@ -38,7 +38,7 @@ const Contact = () => {
 
     try {
       const response = await axios.post(
-        "http://localhost:5000/contact",
+        "https://chatting-app1.onrender.com/contact",
         formData
       );
       setResponseMessage(response.data.message);

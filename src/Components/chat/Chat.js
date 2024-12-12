@@ -17,7 +17,7 @@ const ChatRoom = () => {
   const [users, setUsers] = useState([]);
 
   useEffect(() => {
-    const socketInstance = io("http://localhost:5000");
+    const socketInstance = io("https://chatting-app1.onrender.com");
     setSocket(socketInstance);
 
     socketInstance.on("connect", () => {

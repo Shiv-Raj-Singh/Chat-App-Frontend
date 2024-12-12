@@ -19,7 +19,7 @@ export default function ForgetPassword(){
             // console.log(email);
             // const response = await axios.post("https://chatting-app1.onrender.com/forgot-password" , {email : email})
             // const response = await axios.post("https://chatting-app1.onrender.com/forgotPassword" , {email : email})
-            const response = await axios.post("http://localhost:5000/forgotPassword" , {email : email})
+            const response = await axios.post("https://chatting-app1.onrender.com/forgotPassword" , {email : email})
             const data = await response.data
             // Nav('/')
             console.log(data);
