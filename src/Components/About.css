@@ -1,0 +1,13 @@
+/* Add subtle hover effects to cards */
+.card:hover {
+    transform: translateY(-10px);
+    transition: all 0.3s ease-in-out;
+  }
+  
+  /* Adjust image appearance for better aesthetics */
+  .card-img-top {
+    object-fit: cover;
+    height: 200px;
+    border-bottom: 2px solid #f0f0f0;
+  }
+  

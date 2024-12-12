@@ -1,123 +1,216 @@
-import React, { useRef, useState } from 'react'
-import './loginSignUp.css'
-import {useNavigate} from "react-router-dom";
-import axios from 'axios';
-import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+import React, { useRef, useState } from "react";
+import "./loginSignUp.css";
+import { useNavigate } from "react-router-dom";
+import axios from "axios";
+import { ToastContainer, toast } from "react-toastify";
+import "bootstrap/dist/css/bootstrap.min.css";
+import "react-toastify/dist/ReactToastify.css";
 
-const dummyUser = {name : '' ,  phone : '' , email: '' , password : '' , cPassword:''}
-const errors = {name : '' ,  phone : null , email: null , password : null , cPassword:null}
-
+const dummyUser = {
+  name: "",
+  phone: "",
+  email: "",
+  gender: "",
+  password: "",
+  cPassword: "",
+};
+const errors = {
+  name: "",
+  phone: null,
+  email: null,
+  gender: null,
+  password: null,
+  cPassword: null,
+};
 
 const Register = () => {
-    const [user, setUser] = useState(dummyUser);
-    const [error, setError] = useState(errors);
-    
-    const btn = useRef()
-    const Navigate = useNavigate()
+  const [user, setUser] = useState(dummyUser);
+  const [error, setError] = useState(errors);
 
-    const clickHandler = ()=>{
-        Navigate('/login')
-    }
+  const btn = useRef();
+  const Navigate = useNavigate();
 
-    const handleOnChange = (e)=>{
-        console.log(e);
-        setUser({
-            ...user , 
-            [e.target.name] : e.target.value
-        })
-    }
+  const clickHandler = () => {
+    Navigate("/");
+  };
 
-    const handleSubmit = async  (e)=>{
-        btn.current.setAttribute('disabled' , 'true')
-        e.preventDefault()
-        try {
-            const response = await axios.post("https://chatting-app1.onrender.com/register" , user)
-            console.log(response);
-            const data = await response.data
-            console.log(response);
-            data.status && clickHandler()
-            data? toast.success("Submit-Successfully !" ,{theme : 'green', position: "top-center"}) : alert(data.msg) 
-            btn.current.removeAttribute('disabled')
-            setUser(dummyUser)
-        } catch (err) {
-            
-            const errMsg = err.response.data.message.toLowerCase()
-            const obj = {...errors}
-            for (let key in error){
-            if(errMsg.match(key)){
-                console.log(key);
-                obj[key] = errMsg
-            }
-            }
-            setError(obj)
-            // err.response ? toast.error(err.response.data.message ,{theme : 'dark', position: "top-center"}) :toast.error(err.message ,{position: "top-center"})
-            console.log(errMsg , error);
-            btn.current.removeAttribute('disabled')
+  const handleOnChange = (e) => {
+    setUser({
+      ...user,
+      [e.target.name]: e.target.value,
+    });
+  };
+
+  const handleSubmit = async (e) => {
+    btn.current.setAttribute("disabled", "true");
+    e.preventDefault();
+    try {
+      const response = await axios.post(
+        // "https://chatting-app1.onrender.com/register"
+        "http://localhost:5000/register",
+        user
+      );
+      const data = await response.data;
+      const userData = data.data;
+      localStorage.data = JSON.stringify(userData);
+      localStorage.token = userData.token;
+
+      if (data.status) clickHandler();
+      // Reload the page after setting the data
+      window.location.reload();
+      toast.success("Submitted Successfully!", {
+        theme: "light",
+        position: "top-center",
+      });
+      btn.current.removeAttribute("disabled");
+      setUser(dummyUser);
+    } catch (err) {
+      const errMsg = err.response?.data.message.toLowerCase();
+      const obj = { ...errors };
+      for (let key in error) {
+        if (errMsg?.match(key)) {
+          obj[key] = errMsg;
         }
-    
+      }
+      setError(obj);
+      btn.current.removeAttribute("disabled");
     }
+  };
 
-// console.log(user);
-
-    return (
-        <>
-            <div className="JoinPage mt-1 pt-3">
-          <div className="JoinContainer mt-3 py-3 px-3 pt-3">
-            <p id='hding'>Register Your Account </p>
-             <form className="container mt-2 customForm-register pt-1" id='customForm' onSubmit={handleSubmit}>
-                    {/* <h1 className='hding'>Register Your Account </h1> */}
-                    <div className="mt-4 ">
-                        <input type="text" value={user.name} className="form-control input"required placeholder='Enter Your Name' name="name" onChange={handleOnChange} id="exampleInputEmail1" aria-describedby="emailHelp"/>
-                    </div>
-                    {
-                        error.name && <span className="error"> {error.name}  </span>
-                    }
-                    <div className="mt-2 ">
-                        <input type="tel" value={user.phone} className="form-control"required placeholder='Enter Your Phone' name="phone" onChange={handleOnChange}id="exampleInputEmail1" aria-describedby="emailHelp"/>
-                    </div>
-                    {
-                        error.phone && <span className="p error"> {error.phone}  </span>
-                    }
-                    <div className="mt-2 ">
-                        <input type="email" value={user.email} className="form-control" required placeholder='Enter Your Email' name="email" onChange={handleOnChange}id="exampleInputEmail1" aria-describedby="emailHelp"/>
-                    </div>
-                    {
-                        error.email && <span className="p error"> {error.email}  </span>
-                    }
-                    <div className="mt-2">
-                        <input type="password"  value={user.password} className="form-control" required placeholder='Enter Your Password' name="password" onChange={handleOnChange}  id="exampleInputPassword1" />
-                    </div>
-                    {
-                        error.password && <span className="p error"> {error.password}  </span>
-                    }
-                    <div className="mt-2">
-                        <input type="password" value={user.cPassword} className="form-control" required placeholder='Confirm Your Password' 
-                        name="cPassword" onChange={handleOnChange} id="exampleInputPassword1" />
-                    </div>
-                    {
-                        error.cPassword && <span className="p error"> {error.cPassword}  </span>
-                    }
-                    <div className="my-3 form-check">
-                        <div className='d-flex footer justify-content-between'>
-                            <div>
-                            <input type="checkbox" className="form-check-input" required id="exampleCheck1" />
-                        <label className="form-check-label checkme" for="exampleCheck1">Check me out</label>
-                            </div>
-                            <div>
-                                <p onClick={clickHandler} className="pLink">Have an account? Login Here</p>
-                            </div>
-                        </div>          
-                    </div>
-                <button type="submit" ref={btn} className="btn btn-primary" id='btn1' >Submit</button>
-            </form>
+  return (
+    <>
+      <div
+        className="d-flex justify-content-center align-items-center vh-100"
+        style={{ backgroundColor: "#f7f8fc" }}
+      >
+        <div
+          className="card shadow p-4"
+          style={{
+            width: "400px",
+            borderRadius: "15px",
+            backgroundColor: "white",
+          }}
+        >
+          <h3 className="text-center mb-4">Register Your Account</h3>
+          <form onSubmit={handleSubmit}>
+            <div className="mb-3">
+              <input
+                type="text"
+                value={user.name}
+                className="form-control"
+                required
+                placeholder="Enter Your Name"
+                name="name"
+                onChange={handleOnChange}
+              />
+              {error.name && (
+                <span className="text-danger small">{error.name}</span>
+              )}
             </div>
-        
+            <div className="mb-3">
+              <input
+                type="tel"
+                value={user.phone}
+                className="form-control"
+                required
+                placeholder="Enter Your Phone"
+                name="phone"
+                onChange={handleOnChange}
+              />
+              {error.phone && (
+                <span className="text-danger small">{error.phone}</span>
+              )}
+            </div>
+            <div className="mb-3">
+              <input
+                type="email"
+                value={user.email}
+                className="form-control"
+                required
+                placeholder="Enter Your Email"
+                name="email"
+                onChange={handleOnChange}
+              />
+              {error.email && (
+                <span className="text-danger small">{error.email}</span>
+              )}
+            </div>
+            <div className="mb-3">
+              <select
+                value={user.gender}
+                className="form-select"
+                required
+                name="gender"
+                onChange={handleOnChange}
+              >
+                <option value="" disabled>
+                  Select Gender
+                </option>
+                <option value="male">Male</option>
+                <option value="female">Female</option>
+              </select>
+              {error.gender && (
+                <span className="text-danger small">{error.gender}</span>
+              )}
+            </div>
+            <div className="mb-3">
+              <input
+                type="password"
+                value={user.password}
+                className="form-control"
+                required
+                placeholder="Enter Your Password"
+                name="password"
+                onChange={handleOnChange}
+              />
+              {error.password && (
+                <span className="text-danger small">{error.password}</span>
+              )}
+            </div>
+            <div className="mb-3">
+              <input
+                type="password"
+                value={user.cPassword}
+                className="form-control"
+                required
+                placeholder="Confirm Your Password"
+                name="cPassword"
+                onChange={handleOnChange}
+              />
+              {error.cPassword && (
+                <span className="text-danger small">{error.cPassword}</span>
+              )}
+            </div>
+            <div className="form-check mb-3">
+              <input
+                type="checkbox"
+                className="form-check-input"
+                required
+                id="terms"
+              />
+              <label className="form-check-label" htmlFor="terms">
+                Agree to terms and conditions
+              </label>
+            </div>
+            <button type="submit" ref={btn} className="btn btn-primary w-100">
+              Submit
+            </button>
+            <p className="text-center mt-3">
+              Already have an account?{" "}
+              <span
+                className="text-primary"
+                style={{ cursor: "pointer" }}
+                onClick={clickHandler}
+              >
+                Login Here
+              </span>
+            </p>
+          </form>
         </div>
-        <ToastContainer />
-        </>
-                      );
-}
+      </div>
+      <ToastContainer />
+    </>
+  );
+};
 
-export default Register
-// export { user }
+export default Register;
