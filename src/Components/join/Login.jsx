@@ -1,15 +1,25 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useCallback } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { Phone, Lock, Eye, EyeOff, LogIn, ArrowLeft } from 'lucide-react';
+import { LogIn, ArrowLeft } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { useAuth } from '../../context/AuthContext';
 
 export default function Login() {
   const navigate = useNavigate();
   const { login } = useAuth();
-  const [showPass, setShowPass] = useState(false);
   const [loading, setLoading] = useState(false);
+
+  // DOM ref for password toggle — zero re-renders when showing/hiding
+  const passRef = useRef(null);
+  const eyeRef = useRef(null);
+  const showPassRef = useRef(false);
+
+  const togglePass = useCallback(() => {
+    showPassRef.current = !showPassRef.current;
+    if (passRef.current) passRef.current.type = showPassRef.current ? 'text' : 'password';
+    if (eyeRef.current) eyeRef.current.textContent = showPassRef.current ? '🙈' : '👁️';
+  }, []);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -21,11 +31,10 @@ export default function Login() {
     setLoading(true);
     try {
       await login({ phone, password });
-      toast.success('Welcome back! 🎉');
+      toast.success('Welcome back!');
       navigate('/chat');
     } catch (err) {
-      const msg = err?.response?.data?.message || err?.message || 'Login failed';
-      toast.error(msg);
+      toast.error(err?.response?.data?.message || err?.message || 'Login failed');
     } finally {
       setLoading(false);
     }
@@ -33,21 +42,20 @@ export default function Login() {
 
   return (
     <div className="min-h-screen bg-dark-900 flex items-center justify-center px-4 relative overflow-hidden">
-      <div className="orb w-[500px] h-[500px] top-[-100px] left-[-200px] opacity-20"
-        style={{ background: 'radial-gradient(circle,#7c3aed,transparent)' }} />
-      <div className="orb w-[400px] h-[400px] bottom-[-100px] right-[-150px] opacity-15"
-        style={{ background: 'radial-gradient(circle,#06b6d4,transparent)', animationDelay: '3s' }} />
+      {/* Static blobs — no animation = no GPU repaint while keyboard is visible */}
+      <div className="absolute top-[-100px] left-[-200px] w-[500px] h-[500px] rounded-full pointer-events-none opacity-20"
+        style={{ background: 'radial-gradient(circle,#7c3aed,transparent)', filter: 'blur(80px)' }} />
+      <div className="absolute bottom-[-100px] right-[-150px] w-[400px] h-[400px] rounded-full pointer-events-none opacity-15"
+        style={{ background: 'radial-gradient(circle,#06b6d4,transparent)', filter: 'blur(80px)' }} />
 
       <motion.div
-        initial={{ opacity: 0, y: 30 }}
+        initial={{ opacity: 0, y: 24 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5 }}
+        transition={{ duration: 0.4 }}
         className="w-full max-w-md relative z-10"
       >
-        <button
-          onClick={() => navigate('/')}
-          className="flex items-center gap-2 text-slate-400 hover:text-white mb-8 transition-colors text-sm"
-        >
+        <button onClick={() => navigate('/')}
+          className="flex items-center gap-2 text-slate-400 hover:text-white mb-8 transition-colors text-sm">
           <ArrowLeft size={16} /> Back to home
         </button>
 
@@ -63,50 +71,47 @@ export default function Login() {
             {/* Phone */}
             <div>
               <label className="block text-sm font-medium text-slate-300 mb-2">Phone Number</label>
-              <div className="relative">
-                <Phone size={16} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-500" />
-                <input
-                  name="phone"
-                  type="tel"
-                  defaultValue=""
-                  placeholder="Enter your phone number"
-                  className="input-field pl-10"
-                  required
-                />
-              </div>
+              <input
+                name="phone"
+                type="tel"
+                inputMode="tel"
+                placeholder="Enter your phone number"
+                autoComplete="tel"
+                autoCorrect="off"
+                autoCapitalize="none"
+                spellCheck="false"
+                className="input-field"
+                required
+              />
             </div>
 
             {/* Password */}
             <div>
               <label className="block text-sm font-medium text-slate-300 mb-2">Password</label>
               <div className="relative">
-                <Lock size={16} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-500" />
                 <input
+                  ref={passRef}
                   name="password"
-                  type={showPass ? 'text' : 'password'}
-                  defaultValue=""
+                  type="password"
                   placeholder="Enter your password"
-                  className="input-field pl-10 pr-11"
+                  autoComplete="current-password"
+                  className="input-field pr-11"
                   required
                 />
-                <button
-                  type="button"
-                  onClick={() => setShowPass(!showPass)}
-                  className="absolute right-3.5 top-1/2 -translate-y-1/2 text-slate-500 hover:text-slate-300 transition-colors"
-                >
-                  {showPass ? <EyeOff size={16} /> : <Eye size={16} />}
+                <button type="button" ref={eyeRef} onClick={togglePass}
+                  className="absolute right-3.5 top-1/2 -translate-y-1/2 text-slate-500 hover:text-slate-300 transition-colors text-base leading-none">
+                  👁️
                 </button>
               </div>
             </div>
 
-            {/* Forgot */}
             <div className="flex justify-end">
-              <Link to="/forgot-password" className="text-sm text-violet-400 hover:text-violet-300 transition-colors">
+              <Link to="/forgot-password"
+                className="text-sm text-violet-400 hover:text-violet-300 transition-colors">
                 Forgot password?
               </Link>
             </div>
 
-            {/* Submit */}
             <button type="submit" className="btn-primary w-full py-3.5" disabled={loading}>
               {loading ? (
                 <span className="flex items-center gap-2">

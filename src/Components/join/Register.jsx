@@ -1,35 +1,54 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useCallback } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { User, Phone, Mail, Lock, Eye, EyeOff, UserPlus, ArrowLeft } from 'lucide-react';
+import { UserPlus, ArrowLeft } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { useAuth } from '../../context/AuthContext';
 
-// Stateless — no value/onChange, so these never cause focus loss
-const InputRow = ({ label, icon: Icon, name, type, placeholder, extra }) => (
-  <div>
-    <label className="block text-sm font-medium text-slate-300 mb-2">{label}</label>
-    <div className="relative">
-      <Icon size={16} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-500" />
-      <input
-        name={name}
-        type={type || 'text'}
-        placeholder={placeholder}
-        defaultValue=""
-        autoComplete="off"
-        className={`input-field pl-10 ${extra || ''}`}
-        required
-      />
+// React.memo + no value/onChange = zero React DOM contact during typing
+const Field = React.memo(function Field({ label, name, type, placeholder, inputMode, autoComplete, children }) {
+  return (
+    <div>
+      <label className="block text-sm font-medium text-slate-300 mb-2">{label}</label>
+      <div className="relative">
+        {children || (
+          <input
+            name={name}
+            type={type || 'text'}
+            placeholder={placeholder}
+            inputMode={inputMode}
+            autoComplete={autoComplete || 'off'}
+            autoCorrect="off"
+            autoCapitalize="none"
+            spellCheck="false"
+            className="input-field"
+            required
+          />
+        )}
+      </div>
     </div>
-  </div>
-);
+  );
+});
 
 export default function Register() {
   const navigate = useNavigate();
   const { register } = useAuth();
   const [gender, setGender] = useState('male');
-  const [showPass, setShowPass] = useState(false);
   const [loading, setLoading] = useState(false);
+
+  // Use DOM refs so toggling show/hide password NEVER causes a re-render
+  const passRef = useRef(null);
+  const cPassRef = useRef(null);
+  const eyeRef = useRef(null);
+  const showPassRef = useRef(false);
+
+  const togglePass = useCallback(() => {
+    showPassRef.current = !showPassRef.current;
+    const t = showPassRef.current ? 'text' : 'password';
+    if (passRef.current) passRef.current.type = t;
+    if (cPassRef.current) cPassRef.current.type = t;
+    if (eyeRef.current) eyeRef.current.textContent = showPassRef.current ? '🙈' : '👁️';
+  }, []);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -43,16 +62,17 @@ export default function Register() {
       gender,
     };
 
-    if (!form.name || !form.phone || !form.email || !form.password) {
+    if (!form.name || !form.phone || !form.email || !form.password)
       return toast.error('Please fill in all fields');
-    }
-    if (form.password !== form.cPassword) return toast.error('Passwords do not match');
-    if (form.password.length < 8) return toast.error('Password must be at least 8 characters');
+    if (form.password !== form.cPassword)
+      return toast.error('Passwords do not match');
+    if (form.password.length < 8)
+      return toast.error('Password must be at least 8 characters');
 
     setLoading(true);
     try {
       await register(form);
-      toast.success('Account created! Welcome to NexChat 🎉');
+      toast.success('Account created! Welcome to NexChat');
       navigate('/chat');
     } catch (err) {
       toast.error(err?.response?.data?.message || err?.message || 'Registration failed');
@@ -63,15 +83,16 @@ export default function Register() {
 
   return (
     <div className="min-h-screen bg-dark-900 flex items-center justify-center px-4 py-8 relative overflow-hidden">
-      <div className="orb w-[500px] h-[500px] top-[-100px] right-[-200px] opacity-20"
-        style={{ background: 'radial-gradient(circle,#7c3aed,transparent)' }} />
-      <div className="orb w-[400px] h-[400px] bottom-[-100px] left-[-150px] opacity-15"
-        style={{ background: 'radial-gradient(circle,#06b6d4,transparent)', animationDelay: '2s' }} />
+      {/* Static gradient blobs — no animation so no GPU repaints while typing */}
+      <div className="absolute top-[-100px] right-[-200px] w-[500px] h-[500px] rounded-full pointer-events-none opacity-20"
+        style={{ background: 'radial-gradient(circle,#7c3aed,transparent)', filter: 'blur(80px)' }} />
+      <div className="absolute bottom-[-100px] left-[-150px] w-[400px] h-[400px] rounded-full pointer-events-none opacity-15"
+        style={{ background: 'radial-gradient(circle,#06b6d4,transparent)', filter: 'blur(80px)' }} />
 
       <motion.div
-        initial={{ opacity: 0, y: 30 }}
+        initial={{ opacity: 0, y: 24 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5 }}
+        transition={{ duration: 0.4 }}
         className="w-full max-w-md relative z-10"
       >
         <button onClick={() => navigate('/')}
@@ -88,17 +109,20 @@ export default function Register() {
           </div>
 
           <form onSubmit={handleSubmit} className="space-y-4">
-            <InputRow label="Full Name"     icon={User}  name="name"  placeholder="John Doe" />
-            <InputRow label="Phone Number"  icon={Phone} name="phone" placeholder="9XXXXXXXXX" type="tel" />
-            <InputRow label="Email Address" icon={Mail}  name="email" placeholder="john@example.com" type="email" />
+            <Field label="Full Name" name="name" placeholder="John Doe"
+              autoComplete="name" />
+            <Field label="Phone Number" name="phone" placeholder="9XXXXXXXXX"
+              type="tel" inputMode="tel" autoComplete="tel" />
+            <Field label="Email Address" name="email" placeholder="john@example.com"
+              type="email" inputMode="email" autoComplete="email" />
 
-            {/* Gender */}
+            {/* Gender — isolated state, doesn't re-render any input */}
             <div>
               <label className="block text-sm font-medium text-slate-300 mb-2">Gender</label>
               <div className="grid grid-cols-3 gap-2">
                 {['male', 'female', 'other'].map((g) => (
                   <button key={g} type="button" onClick={() => setGender(g)}
-                    className={`py-2.5 rounded-xl text-sm font-medium transition-all capitalize border ${
+                    className={`py-2.5 rounded-xl text-sm font-medium transition-colors capitalize border ${
                       gender === g
                         ? 'border-violet-500 bg-violet-500/20 text-violet-300'
                         : 'border-slate-700 bg-dark-700 text-slate-400 hover:border-slate-600'
@@ -109,37 +133,37 @@ export default function Register() {
               </div>
             </div>
 
-            {/* Password */}
+            {/* Password — DOM ref toggle, zero re-renders */}
             <div>
               <label className="block text-sm font-medium text-slate-300 mb-2">Password</label>
               <div className="relative">
-                <Lock size={16} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-500" />
                 <input
+                  ref={passRef}
                   name="password"
-                  type={showPass ? 'text' : 'password'}
-                  defaultValue=""
+                  type="password"
                   placeholder="Min. 8 characters"
-                  className="input-field pl-10 pr-11"
+                  autoComplete="new-password"
+                  className="input-field pr-11"
                   required
                 />
-                <button type="button" onClick={() => setShowPass(!showPass)}
-                  className="absolute right-3.5 top-1/2 -translate-y-1/2 text-slate-500 hover:text-slate-300 transition-colors">
-                  {showPass ? <EyeOff size={16} /> : <Eye size={16} />}
+                <button type="button" onClick={togglePass}
+                  ref={eyeRef}
+                  className="absolute right-3.5 top-1/2 -translate-y-1/2 text-slate-500 hover:text-slate-300 transition-colors text-base leading-none">
+                  👁️
                 </button>
               </div>
             </div>
 
-            {/* Confirm Password */}
             <div>
               <label className="block text-sm font-medium text-slate-300 mb-2">Confirm Password</label>
               <div className="relative">
-                <Lock size={16} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-500" />
                 <input
+                  ref={cPassRef}
                   name="cPassword"
-                  type={showPass ? 'text' : 'password'}
-                  defaultValue=""
+                  type="password"
                   placeholder="Repeat your password"
-                  className="input-field pl-10"
+                  autoComplete="new-password"
+                  className="input-field"
                   required
                 />
               </div>
