@@ -8,18 +8,19 @@ import { useAuth } from '../../context/AuthContext';
 export default function Login() {
   const navigate = useNavigate();
   const { login } = useAuth();
-  const [form, setForm] = useState({ phone: '', password: '' });
   const [showPass, setShowPass] = useState(false);
   const [loading, setLoading] = useState(false);
 
-  const handleChange = (e) => setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }));
-
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!form.phone || !form.password) return toast.error('Please fill in all fields');
+    const fd = new FormData(e.target);
+    const phone = fd.get('phone')?.trim();
+    const password = fd.get('password');
+
+    if (!phone || !password) return toast.error('Please fill in all fields');
     setLoading(true);
     try {
-      await login(form);
+      await login({ phone, password });
       toast.success('Welcome back! 🎉');
       navigate('/chat');
     } catch (err) {
@@ -32,7 +33,6 @@ export default function Login() {
 
   return (
     <div className="min-h-screen bg-dark-900 flex items-center justify-center px-4 relative overflow-hidden">
-      {/* Orbs */}
       <div className="orb w-[500px] h-[500px] top-[-100px] left-[-200px] opacity-20"
         style={{ background: 'radial-gradient(circle,#7c3aed,transparent)' }} />
       <div className="orb w-[400px] h-[400px] bottom-[-100px] right-[-150px] opacity-15"
@@ -44,7 +44,6 @@ export default function Login() {
         transition={{ duration: 0.5 }}
         className="w-full max-w-md relative z-10"
       >
-        {/* Back */}
         <button
           onClick={() => navigate('/')}
           className="flex items-center gap-2 text-slate-400 hover:text-white mb-8 transition-colors text-sm"
@@ -53,7 +52,6 @@ export default function Login() {
         </button>
 
         <div className="glass-card p-8">
-          {/* Logo */}
           <div className="flex flex-col items-center mb-8">
             <div className="w-14 h-14 rounded-2xl flex items-center justify-center text-3xl font-black text-white mb-4"
               style={{ background: 'linear-gradient(135deg,#7c3aed,#06b6d4)' }}>N</div>
@@ -70,8 +68,7 @@ export default function Login() {
                 <input
                   name="phone"
                   type="tel"
-                  value={form.phone}
-                  onChange={handleChange}
+                  defaultValue=""
                   placeholder="Enter your phone number"
                   className="input-field pl-10"
                   required
@@ -87,8 +84,7 @@ export default function Login() {
                 <input
                   name="password"
                   type={showPass ? 'text' : 'password'}
-                  value={form.password}
-                  onChange={handleChange}
+                  defaultValue=""
                   placeholder="Enter your password"
                   className="input-field pl-10 pr-11"
                   required

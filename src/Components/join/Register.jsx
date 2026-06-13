@@ -5,8 +5,8 @@ import { User, Phone, Mail, Lock, Eye, EyeOff, UserPlus, ArrowLeft } from 'lucid
 import toast from 'react-hot-toast';
 import { useAuth } from '../../context/AuthContext';
 
-// Defined OUTSIDE to prevent focus loss on every keystroke
-const InputRow = ({ label, icon: Icon, name, type, placeholder, value, onChange }) => (
+// Stateless — no value/onChange, so these never cause focus loss
+const InputRow = ({ label, icon: Icon, name, type, placeholder, extra }) => (
   <div>
     <label className="block text-sm font-medium text-slate-300 mb-2">{label}</label>
     <div className="relative">
@@ -14,10 +14,10 @@ const InputRow = ({ label, icon: Icon, name, type, placeholder, value, onChange 
       <input
         name={name}
         type={type || 'text'}
-        value={value}
-        onChange={onChange}
         placeholder={placeholder}
-        className="input-field pl-10"
+        defaultValue=""
+        autoComplete="off"
+        className={`input-field pl-10 ${extra || ''}`}
         required
       />
     </div>
@@ -27,17 +27,28 @@ const InputRow = ({ label, icon: Icon, name, type, placeholder, value, onChange 
 export default function Register() {
   const navigate = useNavigate();
   const { register } = useAuth();
-  const [form, setForm] = useState({ name: '', phone: '', email: '', password: '', cPassword: '', gender: 'male' });
+  const [gender, setGender] = useState('male');
   const [showPass, setShowPass] = useState(false);
   const [loading, setLoading] = useState(false);
 
-  const handleChange = (e) => setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }));
-
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!form.name || !form.phone || !form.email || !form.password) return toast.error('Please fill in all fields');
+    const fd = new FormData(e.target);
+    const form = {
+      name: fd.get('name')?.trim(),
+      phone: fd.get('phone')?.trim(),
+      email: fd.get('email')?.trim(),
+      password: fd.get('password'),
+      cPassword: fd.get('cPassword'),
+      gender,
+    };
+
+    if (!form.name || !form.phone || !form.email || !form.password) {
+      return toast.error('Please fill in all fields');
+    }
     if (form.password !== form.cPassword) return toast.error('Passwords do not match');
     if (form.password.length < 8) return toast.error('Password must be at least 8 characters');
+
     setLoading(true);
     try {
       await register(form);
@@ -77,18 +88,18 @@ export default function Register() {
           </div>
 
           <form onSubmit={handleSubmit} className="space-y-4">
-            <InputRow label="Full Name"     icon={User}  name="name"  placeholder="John Doe"       value={form.name}  onChange={handleChange} />
-            <InputRow label="Phone Number"  icon={Phone} name="phone" placeholder="9XXXXXXXXX" type="tel"  value={form.phone} onChange={handleChange} />
-            <InputRow label="Email Address" icon={Mail}  name="email" placeholder="john@example.com" type="email" value={form.email} onChange={handleChange} />
+            <InputRow label="Full Name"     icon={User}  name="name"  placeholder="John Doe" />
+            <InputRow label="Phone Number"  icon={Phone} name="phone" placeholder="9XXXXXXXXX" type="tel" />
+            <InputRow label="Email Address" icon={Mail}  name="email" placeholder="john@example.com" type="email" />
 
             {/* Gender */}
             <div>
               <label className="block text-sm font-medium text-slate-300 mb-2">Gender</label>
               <div className="grid grid-cols-3 gap-2">
                 {['male', 'female', 'other'].map((g) => (
-                  <button key={g} type="button" onClick={() => setForm((prev) => ({ ...prev, gender: g }))}
+                  <button key={g} type="button" onClick={() => setGender(g)}
                     className={`py-2.5 rounded-xl text-sm font-medium transition-all capitalize border ${
-                      form.gender === g
+                      gender === g
                         ? 'border-violet-500 bg-violet-500/20 text-violet-300'
                         : 'border-slate-700 bg-dark-700 text-slate-400 hover:border-slate-600'
                     }`}>
@@ -103,8 +114,14 @@ export default function Register() {
               <label className="block text-sm font-medium text-slate-300 mb-2">Password</label>
               <div className="relative">
                 <Lock size={16} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-500" />
-                <input name="password" type={showPass ? 'text' : 'password'} value={form.password}
-                  onChange={handleChange} placeholder="Min. 8 characters" className="input-field pl-10 pr-11" required />
+                <input
+                  name="password"
+                  type={showPass ? 'text' : 'password'}
+                  defaultValue=""
+                  placeholder="Min. 8 characters"
+                  className="input-field pl-10 pr-11"
+                  required
+                />
                 <button type="button" onClick={() => setShowPass(!showPass)}
                   className="absolute right-3.5 top-1/2 -translate-y-1/2 text-slate-500 hover:text-slate-300 transition-colors">
                   {showPass ? <EyeOff size={16} /> : <Eye size={16} />}
@@ -117,8 +134,14 @@ export default function Register() {
               <label className="block text-sm font-medium text-slate-300 mb-2">Confirm Password</label>
               <div className="relative">
                 <Lock size={16} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-500" />
-                <input name="cPassword" type={showPass ? 'text' : 'password'} value={form.cPassword}
-                  onChange={handleChange} placeholder="Repeat your password" className="input-field pl-10" required />
+                <input
+                  name="cPassword"
+                  type={showPass ? 'text' : 'password'}
+                  defaultValue=""
+                  placeholder="Repeat your password"
+                  className="input-field pl-10"
+                  required
+                />
               </div>
             </div>
 
