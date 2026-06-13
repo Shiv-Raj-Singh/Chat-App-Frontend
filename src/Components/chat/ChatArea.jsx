@@ -1,18 +1,22 @@
 import React, { useState, useRef, useEffect, useCallback } from 'react';
-import { motion } from 'framer-motion';
-import { Send, Smile, Hash, Users, Loader } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { Send, Smile, Hash, Users, Loader, Link2, Trash2, Shield, ChevronDown } from 'lucide-react';
 import { useSocket } from '../../context/SocketContext';
 import { useAuth } from '../../context/AuthContext';
+import API from '../../api';
 import MessageBubble from './MessageBubble';
 import TypingIndicator from './TypingIndicator';
+import toast from 'react-hot-toast';
 
 const COMMON_EMOJIS = ['😊','😂','❤️','🔥','👍','🎉','😍','🙌','💯','✨','🚀','💜','😎','🤩','👏'];
 
-export default function ChatArea({ room, messages, typingUsers, loading, onToggleUsers }) {
+export default function ChatArea({ room, messages, typingUsers, loading, onToggleUsers, onRoomDeleted }) {
   const { user } = useAuth();
-  const { sendMessage, emitTyping } = useSocket();
+  const { socket, sendMessage, emitTyping } = useSocket();
   const [text, setText] = useState('');
   const [showEmoji, setShowEmoji] = useState(false);
+  const [showAdminMenu, setShowAdminMenu] = useState(false);
+  const [deleting, setDeleting] = useState(false);
   const messagesEndRef = useRef(null);
   const inputRef = useRef(null);
   const typingTimerRef = useRef(null);
@@ -21,6 +25,14 @@ export default function ChatArea({ room, messages, typingUsers, loading, onToggl
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages, typingUsers]);
+
+  // Close admin menu on outside click
+  useEffect(() => {
+    if (!showAdminMenu) return;
+    const close = () => setShowAdminMenu(false);
+    window.addEventListener('click', close, { once: true });
+    return () => window.removeEventListener('click', close);
+  }, [showAdminMenu]);
 
   const stopTyping = useCallback(() => {
     if (isTypingRef.current && room) {
@@ -62,7 +74,38 @@ export default function ChatArea({ room, messages, typingUsers, loading, onToggl
     inputRef.current?.focus();
   };
 
+  const copyInviteLink = () => {
+    const link = `${window.location.origin}/chat?room=${room._id}`;
+    navigator.clipboard.writeText(link).then(() => {
+      toast.success('Invite link copied to clipboard!', { icon: '🔗' });
+    }).catch(() => {
+      toast.error('Failed to copy link');
+    });
+    setShowAdminMenu(false);
+  };
+
+  const handleDeleteRoom = async () => {
+    if (!window.confirm(`Delete #${room.name}? This action cannot be undone.`)) return;
+    setDeleting(true);
+    try {
+      await API.delete(`/rooms/${room._id}`);
+      socket?.emit('deleteRoom', { roomId: room._id });
+      toast.success(`Room #${room.name} deleted`);
+      onRoomDeleted?.(room._id);
+    } catch (err) {
+      toast.error(err?.response?.data?.message || 'Failed to delete room');
+    } finally {
+      setDeleting(false);
+      setShowAdminMenu(false);
+    }
+  };
+
   const typingList = Object.values(typingUsers).filter(Boolean);
+  const isCreator = room && user && (
+    room.creator?._id === user._id ||
+    room.creator?._id?.toString() === user._id?.toString() ||
+    room.creator === user._id
+  );
 
   if (!room) {
     return (
@@ -85,20 +128,82 @@ export default function ChatArea({ room, messages, typingUsers, loading, onToggl
             {room.emoji || '#'}
           </div>
           <div>
-            <h2 className="font-semibold text-white text-base leading-tight">
+            <h2 className="font-semibold text-white text-base leading-tight flex items-center gap-2">
               {room.name}
+              {isCreator && (
+                <span title="You are the admin" className="text-violet-400">
+                  <Shield size={12} />
+                </span>
+              )}
             </h2>
             {room.description && (
               <p className="text-xs text-slate-500 leading-tight">{room.description}</p>
             )}
           </div>
         </div>
-        <button
-          onClick={onToggleUsers}
-          className="p-2 rounded-lg text-slate-400 hover:text-white hover:bg-dark-700 transition-all"
-        >
-          <Users size={18} />
-        </button>
+
+        <div className="flex items-center gap-1">
+          {/* Invite link button (visible to all) */}
+          <button
+            onClick={copyInviteLink}
+            title="Copy invite link"
+            className="p-2 rounded-lg text-slate-400 hover:text-violet-400 hover:bg-violet-500/10 transition-all"
+          >
+            <Link2 size={17} />
+          </button>
+
+          {/* Admin menu (only for room creator) */}
+          {isCreator && !room.isDefault && (
+            <div className="relative">
+              <button
+                onClick={(e) => { e.stopPropagation(); setShowAdminMenu(!showAdminMenu); }}
+                title="Admin options"
+                className="p-2 rounded-lg text-slate-400 hover:text-white hover:bg-dark-700 transition-all flex items-center gap-1"
+              >
+                <Shield size={17} />
+                <ChevronDown size={13} />
+              </button>
+
+              <AnimatePresence>
+                {showAdminMenu && (
+                  <motion.div
+                    initial={{ opacity: 0, y: -8, scale: 0.95 }}
+                    animate={{ opacity: 1, y: 0, scale: 1 }}
+                    exit={{ opacity: 0, y: -8, scale: 0.95 }}
+                    transition={{ duration: 0.15 }}
+                    onClick={(e) => e.stopPropagation()}
+                    className="absolute right-0 top-full mt-1 w-48 glass-card py-1.5 z-50 shadow-2xl"
+                  >
+                    <button
+                      onClick={copyInviteLink}
+                      className="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-slate-300 hover:bg-dark-600 hover:text-white transition-colors"
+                    >
+                      <Link2 size={15} className="text-violet-400" />
+                      Copy invite link
+                    </button>
+                    <div className="border-t border-slate-800 my-1" />
+                    <button
+                      onClick={handleDeleteRoom}
+                      disabled={deleting}
+                      className="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-red-400 hover:bg-red-500/10 hover:text-red-300 transition-colors"
+                    >
+                      <Trash2 size={15} />
+                      {deleting ? 'Deleting…' : 'Delete room'}
+                    </button>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </div>
+          )}
+
+          {/* Online users toggle */}
+          <button
+            onClick={onToggleUsers}
+            className="p-2 rounded-lg text-slate-400 hover:text-white hover:bg-dark-700 transition-all"
+          >
+            <Users size={18} />
+          </button>
+        </div>
       </div>
 
       {/* Messages */}
@@ -137,7 +242,6 @@ export default function ChatArea({ room, messages, typingUsers, loading, onToggl
 
       {/* Input */}
       <div className="px-4 pb-4 pt-2 flex-shrink-0">
-        {/* Emoji picker */}
         {showEmoji && (
           <motion.div
             initial={{ opacity: 0, y: 10 }}

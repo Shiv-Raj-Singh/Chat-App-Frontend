@@ -20,13 +20,17 @@ export default function ChatLayout() {
   const [usersOpen, setUsersOpen] = useState(false);
   const [loadingMsgs, setLoadingMsgs] = useState(false);
 
-  // Fetch rooms
+  // Fetch rooms, then auto-select from ?room= URL param or default to first
   useEffect(() => {
     API.get('/rooms').then(({ data }) => {
-      if (data.status) {
-        setRooms(data.data);
-        if (data.data.length > 0) setActiveRoom(data.data[0]);
-      }
+      if (!data.status) return;
+      setRooms(data.data);
+      const params = new URLSearchParams(window.location.search);
+      const roomId = params.get('room');
+      const target = roomId
+        ? data.data.find((r) => r._id === roomId) || data.data[0]
+        : data.data[0];
+      if (target) setActiveRoom(target);
     }).catch(() => toast.error('Failed to load rooms'));
   }, []);
 
@@ -69,17 +73,63 @@ export default function ChatLayout() {
     };
 
     const handleUserJoined = ({ name, roomId }) => {
-      if (roomId === activeRoom?._id) toast.success(`${name} joined the room`, { duration: 2000 });
+      if (roomId === activeRoom?._id) toast(`${name} joined the room`, { icon: '👋', duration: 2000 });
+    };
+
+    // New room created by someone else — add to sidebar instantly
+    const handleRoomCreated = (room) => {
+      setRooms((prev) => {
+        if (prev.find((r) => r._id === room._id)) return prev;
+        return [...prev, room];
+      });
+      toast(`New room #${room.name} was created`, { icon: room.emoji || '#', duration: 3000 });
+    };
+
+    // Room deleted by creator
+    const handleRoomDeleted = ({ roomId }) => {
+      setRooms((prev) => {
+        const remaining = prev.filter((r) => r._id !== roomId);
+        if (activeRoom?._id === roomId && remaining.length > 0) {
+          setActiveRoom(remaining[0]);
+        }
+        return remaining;
+      });
+      toast.error('This room was deleted by the admin', { duration: 4000 });
+    };
+
+    // Kicked from a room
+    const handleKicked = ({ roomId, by }) => {
+      if (activeRoom?._id === roomId) {
+        toast.error(`You were removed from this room by ${by}`, { duration: 5000 });
+        setRooms((prev) => {
+          const remaining = prev.filter((r) => r._id !== roomId);
+          if (remaining.length > 0) setActiveRoom(remaining[0]);
+          return prev;
+        });
+      }
+    };
+
+    // Blocked from joining a room
+    const handleJoinError = ({ message }) => {
+      toast.error(message, { duration: 4000 });
     };
 
     socket.on('newMessage', handleNewMessage);
     socket.on('typing', handleTyping);
     socket.on('userJoined', handleUserJoined);
+    socket.on('roomCreated', handleRoomCreated);
+    socket.on('roomDeleted', handleRoomDeleted);
+    socket.on('kicked', handleKicked);
+    socket.on('joinError', handleJoinError);
 
     return () => {
       socket.off('newMessage', handleNewMessage);
       socket.off('typing', handleTyping);
       socket.off('userJoined', handleUserJoined);
+      socket.off('roomCreated', handleRoomCreated);
+      socket.off('roomDeleted', handleRoomDeleted);
+      socket.off('kicked', handleKicked);
+      socket.off('joinError', handleJoinError);
     };
   }, [socket, activeRoom]);
 
@@ -91,11 +141,14 @@ export default function ChatLayout() {
     setSidebarOpen(false);
   }, [socket, activeRoom, leaveRoom]);
 
-  const handleRoomCreated = (room) => {
-    setRooms((prev) => [...prev, room]);
+  const handleRoomCreated = useCallback((room) => {
+    setRooms((prev) => {
+      if (prev.find((r) => r._id === room._id)) return prev;
+      return [...prev, room];
+    });
     setActiveRoom(room);
     setSidebarOpen(false);
-  };
+  }, []);
 
   return (
     <div className="h-screen bg-dark-900 flex overflow-hidden">
@@ -113,46 +166,35 @@ export default function ChatLayout() {
       </AnimatePresence>
 
       {/* Sidebar */}
-      <AnimatePresence>
-        {(sidebarOpen || true) && (
-          <motion.div
-            initial={false}
-            className={`
-              fixed lg:relative inset-y-0 left-0 z-30 lg:z-auto
-              w-72 lg:w-72 flex-shrink-0
-              transform transition-transform duration-300 ease-out
-              ${sidebarOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}
-            `}
-          >
-            <Sidebar
-              rooms={rooms}
-              activeRoom={activeRoom}
-              user={user}
-              onSelectRoom={handleSelectRoom}
-              onRoomCreated={handleRoomCreated}
-              onClose={() => setSidebarOpen(false)}
-            />
-          </motion.div>
-        )}
-      </AnimatePresence>
+      <div className={`
+        fixed lg:relative inset-y-0 left-0 z-30 lg:z-auto
+        w-72 flex-shrink-0
+        transform transition-transform duration-300 ease-out
+        ${sidebarOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}
+      `}>
+        <Sidebar
+          rooms={rooms}
+          activeRoom={activeRoom}
+          user={user}
+          onSelectRoom={handleSelectRoom}
+          onRoomCreated={handleRoomCreated}
+          onClose={() => setSidebarOpen(false)}
+        />
+      </div>
 
       {/* Main chat */}
       <div className="flex-1 flex flex-col min-w-0">
         {/* Mobile top bar */}
         <div className="flex items-center gap-3 px-4 py-3 border-b border-slate-800 lg:hidden bg-dark-800">
-          <button
-            onClick={() => setSidebarOpen(true)}
-            className="p-2 rounded-lg text-slate-400 hover:text-white hover:bg-dark-600 transition-colors"
-          >
+          <button onClick={() => setSidebarOpen(true)}
+            className="p-2 rounded-lg text-slate-400 hover:text-white hover:bg-dark-600 transition-colors">
             <Menu size={20} />
           </button>
           <span className="font-semibold text-white truncate">
-            {activeRoom ? `# ${activeRoom.name}` : 'NexChat'}
+            {activeRoom ? `${activeRoom.emoji || '#'} ${activeRoom.name}` : 'NexChat'}
           </span>
-          <button
-            onClick={() => setUsersOpen(!usersOpen)}
-            className="ml-auto p-2 rounded-lg text-slate-400 hover:text-white hover:bg-dark-600 transition-colors"
-          >
+          <button onClick={() => setUsersOpen(!usersOpen)}
+            className="ml-auto p-2 rounded-lg text-slate-400 hover:text-white hover:bg-dark-600 transition-colors">
             <Menu size={20} />
           </button>
         </div>
@@ -164,25 +206,25 @@ export default function ChatLayout() {
           loading={loadingMsgs}
           currentUser={user}
           onToggleUsers={() => setUsersOpen(!usersOpen)}
+          onRoomDeleted={(roomId) => {
+            setRooms((prev) => {
+              const remaining = prev.filter((r) => r._id !== roomId);
+              if (remaining.length > 0) setActiveRoom(remaining[0]);
+              return remaining;
+            });
+          }}
         />
       </div>
 
       {/* Online users panel */}
-      <AnimatePresence>
-        {(usersOpen || typeof window !== 'undefined') && (
-          <motion.div
-            initial={false}
-            className={`
-              fixed lg:relative inset-y-0 right-0 z-30 lg:z-auto
-              w-60 flex-shrink-0
-              transform transition-transform duration-300 ease-out
-              ${usersOpen ? 'translate-x-0' : 'translate-x-full lg:translate-x-0'}
-            `}
-          >
-            <OnlineUsers onClose={() => setUsersOpen(false)} />
-          </motion.div>
-        )}
-      </AnimatePresence>
+      <div className={`
+        fixed lg:relative inset-y-0 right-0 z-30 lg:z-auto
+        w-60 flex-shrink-0
+        transform transition-transform duration-300 ease-out
+        ${usersOpen ? 'translate-x-0' : 'translate-x-full lg:translate-x-0'}
+      `}>
+        <OnlineUsers activeRoom={activeRoom} onClose={() => setUsersOpen(false)} />
+      </div>
     </div>
   );
 }

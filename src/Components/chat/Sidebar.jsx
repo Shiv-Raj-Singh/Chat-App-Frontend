@@ -12,7 +12,7 @@ const EMOJI_OPTIONS = ['💬', '🎲', '💻', '🎮', '🎵', '📚', '🌍', '
 export default function Sidebar({ rooms, activeRoom, user, onSelectRoom, onRoomCreated, onClose }) {
   const navigate = useNavigate();
   const { logout } = useAuth();
-  const { isConnected } = useSocket();
+  const { socket, isConnected } = useSocket();
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [creating, setCreating] = useState(false);
   const [newRoom, setNewRoom] = useState({ name: '', description: '', emoji: '💬' });
@@ -25,6 +25,8 @@ export default function Sidebar({ rooms, activeRoom, user, onSelectRoom, onRoomC
       const { data } = await API.post('/rooms', newRoom);
       if (data.status) {
         onRoomCreated(data.data);
+        // broadcast to all other connected clients
+        socket?.emit('newRoom', data.data);
         setShowCreateModal(false);
         setNewRoom({ name: '', description: '', emoji: '💬' });
         toast.success(`# ${data.data.name} created!`);
