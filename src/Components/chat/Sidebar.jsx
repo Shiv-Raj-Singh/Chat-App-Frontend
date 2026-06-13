@@ -15,7 +15,7 @@ export default function Sidebar({ rooms, activeRoom, user, onSelectRoom, onRoomC
   const { socket, isConnected } = useSocket();
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [creating, setCreating] = useState(false);
-  const [newRoom, setNewRoom] = useState({ name: '', description: '', emoji: '💬' });
+  const [newRoom, setNewRoom] = useState({ name: '', description: '', emoji: '💬', maxMembers: '' });
 
   const handleCreateRoom = async (e) => {
     e.preventDefault();
@@ -28,7 +28,7 @@ export default function Sidebar({ rooms, activeRoom, user, onSelectRoom, onRoomC
         // broadcast to all other connected clients
         socket?.emit('newRoom', data.data);
         setShowCreateModal(false);
-        setNewRoom({ name: '', description: '', emoji: '💬' });
+        setNewRoom({ name: '', description: '', emoji: '💬', maxMembers: '' });
         toast.success(`# ${data.data.name} created!`);
       }
     } catch (err) {
@@ -216,6 +216,21 @@ export default function Sidebar({ rooms, activeRoom, user, onSelectRoom, onRoomC
                     placeholder="What's this room about?"
                     className="input-field"
                     maxLength={200}
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-slate-300 mb-2">
+                    Member Limit <span className="text-slate-600">(optional)</span>
+                  </label>
+                  <input
+                    type="number"
+                    value={newRoom.maxMembers}
+                    onChange={(e) => setNewRoom({ ...newRoom, maxMembers: e.target.value })}
+                    placeholder="Leave blank for unlimited"
+                    className="input-field"
+                    min={2}
+                    max={500}
                   />
                 </div>
 

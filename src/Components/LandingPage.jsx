@@ -47,6 +47,7 @@ export default function LandingPage() {
           animate={{ opacity: 1, x: 0 }}
           className="flex items-center gap-3"
         >
+          <button className="btn-ghost text-sm hidden sm:flex" onClick={() => navigate('/about')}>About</button>
           {user ? (
             <button className="btn-primary px-5 py-2.5 text-sm" onClick={() => navigate('/chat')}>
               Open Chat <ArrowRight size={15} />

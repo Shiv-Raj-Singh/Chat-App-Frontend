@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Send, Smile, Hash, Users, Loader, Link2, Trash2, Shield, ChevronDown } from 'lucide-react';
+import { Send, Smile, Hash, Users, Loader, Link2, Trash2, Shield, ChevronDown, UserPlus, X } from 'lucide-react';
 import { useSocket } from '../../context/SocketContext';
 import { useAuth } from '../../context/AuthContext';
 import API from '../../api';
@@ -10,13 +10,15 @@ import toast from 'react-hot-toast';
 
 const COMMON_EMOJIS = ['😊','😂','❤️','🔥','👍','🎉','😍','🙌','💯','✨','🚀','💜','😎','🤩','👏'];
 
-export default function ChatArea({ room, messages, typingUsers, loading, onToggleUsers, onRoomDeleted }) {
+export default function ChatArea({ room, messages, typingUsers, memberCount, loading, onToggleUsers, onRoomDeleted }) {
   const { user } = useAuth();
-  const { socket, sendMessage, emitTyping } = useSocket();
+  const { socket, sendMessage, emitTyping, onlineUsers } = useSocket();
   const [text, setText] = useState('');
   const [showEmoji, setShowEmoji] = useState(false);
   const [showAdminMenu, setShowAdminMenu] = useState(false);
+  const [showInvitePanel, setShowInvitePanel] = useState(false);
   const [deleting, setDeleting] = useState(false);
+  const [inviting, setInviting] = useState(null);
   const messagesEndRef = useRef(null);
   const inputRef = useRef(null);
   const typingTimerRef = useRef(null);
@@ -26,7 +28,6 @@ export default function ChatArea({ room, messages, typingUsers, loading, onToggl
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages, typingUsers]);
 
-  // Close admin menu on outside click
   useEffect(() => {
     if (!showAdminMenu) return;
     const close = () => setShowAdminMenu(false);
@@ -44,10 +45,7 @@ export default function ChatArea({ room, messages, typingUsers, loading, onToggl
   const handleInput = (e) => {
     setText(e.target.value);
     if (!room) return;
-    if (!isTypingRef.current) {
-      emitTyping(room._id, true);
-      isTypingRef.current = true;
-    }
+    if (!isTypingRef.current) { emitTyping(room._id, true); isTypingRef.current = true; }
     clearTimeout(typingTimerRef.current);
     typingTimerRef.current = setTimeout(stopTyping, 1500);
   };
@@ -62,10 +60,7 @@ export default function ChatArea({ room, messages, typingUsers, loading, onToggl
   }, [text, room, sendMessage, stopTyping]);
 
   const handleKeyDown = (e) => {
-    if (e.key === 'Enter' && !e.shiftKey) {
-      e.preventDefault();
-      handleSend();
-    }
+    if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); handleSend(); }
   };
 
   const insertEmoji = (emoji) => {
@@ -76,16 +71,14 @@ export default function ChatArea({ room, messages, typingUsers, loading, onToggl
 
   const copyInviteLink = () => {
     const link = `${window.location.origin}/chat?room=${room._id}`;
-    navigator.clipboard.writeText(link).then(() => {
-      toast.success('Invite link copied to clipboard!', { icon: '🔗' });
-    }).catch(() => {
-      toast.error('Failed to copy link');
-    });
+    navigator.clipboard.writeText(link)
+      .then(() => toast.success('Invite link copied!', { icon: '🔗' }))
+      .catch(() => toast.error('Failed to copy link'));
     setShowAdminMenu(false);
   };
 
   const handleDeleteRoom = async () => {
-    if (!window.confirm(`Delete #${room.name}? This action cannot be undone.`)) return;
+    if (!window.confirm(`Delete #${room.name}? This cannot be undone.`)) return;
     setDeleting(true);
     try {
       await API.delete(`/rooms/${room._id}`);
@@ -100,11 +93,30 @@ export default function ChatArea({ room, messages, typingUsers, loading, onToggl
     }
   };
 
+  const handleInviteUser = (targetUser) => {
+    if (!socket || !room) return;
+    setInviting(targetUser.userId);
+    socket.emit('inviteUser', {
+      roomId: room._id,
+      roomName: room.name,
+      roomEmoji: room.emoji,
+      toUserId: targetUser.userId,
+    });
+    toast.success(`Invite sent to ${targetUser.name}!`, { icon: '✉️' });
+    setTimeout(() => setInviting(null), 1500);
+  };
+
   const typingList = Object.values(typingUsers).filter(Boolean);
+
   const isCreator = room && user && (
     room.creator?._id === user._id ||
     room.creator?._id?.toString() === user._id?.toString() ||
     room.creator === user._id
+  );
+
+  // Online users excluding self for invite panel
+  const invitableUsers = (onlineUsers || []).filter(
+    (u) => u.userId !== user?._id && u.name !== user?.name
   );
 
   if (!room) {
@@ -124,69 +136,107 @@ export default function ChatArea({ room, messages, typingUsers, loading, onToggl
       {/* Header */}
       <div className="flex items-center justify-between px-5 py-3.5 border-b border-slate-800 bg-dark-900 flex-shrink-0">
         <div className="flex items-center gap-3">
-          <div className="w-8 h-8 rounded-lg flex items-center justify-center text-lg bg-dark-700">
-            {room.emoji || '#'}
-          </div>
+          <div className="w-8 h-8 rounded-lg flex items-center justify-center text-lg bg-dark-700">{room.emoji || '#'}</div>
           <div>
             <h2 className="font-semibold text-white text-base leading-tight flex items-center gap-2">
               {room.name}
-              {isCreator && (
-                <span title="You are the admin" className="text-violet-400">
-                  <Shield size={12} />
+              {isCreator && <span title="You are admin"><Shield size={12} className="text-violet-400" /></span>}
+            </h2>
+            <p className="text-xs text-slate-500 leading-tight flex items-center gap-1.5">
+              {room.description && <span className="truncate max-w-[160px]">{room.description}</span>}
+              {memberCount > 0 && (
+                <span className="flex items-center gap-1 text-emerald-500 font-medium">
+                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 inline-block" />
+                  {memberCount} online
+                  {room.maxMembers ? ` / ${room.maxMembers}` : ''}
                 </span>
               )}
-            </h2>
-            {room.description && (
-              <p className="text-xs text-slate-500 leading-tight">{room.description}</p>
-            )}
+            </p>
           </div>
         </div>
 
         <div className="flex items-center gap-1">
-          {/* Invite link button (visible to all) */}
-          <button
-            onClick={copyInviteLink}
-            title="Copy invite link"
-            className="p-2 rounded-lg text-slate-400 hover:text-violet-400 hover:bg-violet-500/10 transition-all"
-          >
+          {/* Invite link (everyone) */}
+          <button onClick={copyInviteLink} title="Copy invite link"
+            className="p-2 rounded-lg text-slate-400 hover:text-violet-400 hover:bg-violet-500/10 transition-all">
             <Link2 size={17} />
           </button>
 
-          {/* Admin menu (only for room creator) */}
-          {isCreator && !room.isDefault && (
+          {/* Invite online user directly (admin only) */}
+          {isCreator && (
             <div className="relative">
               <button
-                onClick={(e) => { e.stopPropagation(); setShowAdminMenu(!showAdminMenu); }}
-                title="Admin options"
-                className="p-2 rounded-lg text-slate-400 hover:text-white hover:bg-dark-700 transition-all flex items-center gap-1"
+                onClick={(e) => { e.stopPropagation(); setShowInvitePanel(!showInvitePanel); setShowAdminMenu(false); }}
+                title="Invite a user"
+                className={`p-2 rounded-lg transition-all ${showInvitePanel ? 'text-cyan-400 bg-cyan-500/10' : 'text-slate-400 hover:text-cyan-400 hover:bg-cyan-500/10'}`}
               >
-                <Shield size={17} />
-                <ChevronDown size={13} />
+                <UserPlus size={17} />
               </button>
+              <AnimatePresence>
+                {showInvitePanel && (
+                  <motion.div
+                    initial={{ opacity: 0, y: -8, scale: 0.95 }}
+                    animate={{ opacity: 1, y: 0, scale: 1 }}
+                    exit={{ opacity: 0, y: -8, scale: 0.95 }}
+                    onClick={(e) => e.stopPropagation()}
+                    className="absolute right-0 top-full mt-1 w-56 glass-card py-2 z-50 shadow-2xl"
+                  >
+                    <div className="flex items-center justify-between px-3 pb-2 border-b border-slate-800">
+                      <span className="text-xs font-semibold text-slate-400 uppercase tracking-wider">Invite to room</span>
+                      <button onClick={() => setShowInvitePanel(false)} className="text-slate-600 hover:text-slate-400 transition-colors">
+                        <X size={13} />
+                      </button>
+                    </div>
+                    {invitableUsers.length === 0 ? (
+                      <p className="text-xs text-slate-600 text-center py-4">No other users online</p>
+                    ) : (
+                      invitableUsers.map((u) => (
+                        <button key={u.userId} onClick={() => handleInviteUser(u)}
+                          disabled={inviting === u.userId}
+                          className="w-full flex items-center gap-2.5 px-3 py-2 hover:bg-dark-600 transition-colors">
+                          <div className="w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold text-white flex-shrink-0"
+                            style={{ background: u.avatarColor || '#7c3aed' }}>
+                            {u.name?.charAt(0).toUpperCase()}
+                          </div>
+                          <span className="text-sm text-slate-200 truncate flex-1 text-left">{u.name}</span>
+                          {inviting === u.userId ? (
+                            <div className="w-3.5 h-3.5 border border-cyan-400/40 border-t-cyan-400 rounded-full animate-spin" />
+                          ) : (
+                            <span className="text-[10px] text-cyan-400 font-medium">Invite</span>
+                          )}
+                        </button>
+                      ))
+                    )}
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </div>
+          )}
 
+          {/* Admin menu (creator only, non-default rooms) */}
+          {isCreator && !room.isDefault && (
+            <div className="relative">
+              <button onClick={(e) => { e.stopPropagation(); setShowAdminMenu(!showAdminMenu); setShowInvitePanel(false); }}
+                title="Admin options"
+                className="p-2 rounded-lg text-slate-400 hover:text-white hover:bg-dark-700 transition-all flex items-center gap-1">
+                <Shield size={17} /><ChevronDown size={13} />
+              </button>
               <AnimatePresence>
                 {showAdminMenu && (
                   <motion.div
                     initial={{ opacity: 0, y: -8, scale: 0.95 }}
                     animate={{ opacity: 1, y: 0, scale: 1 }}
                     exit={{ opacity: 0, y: -8, scale: 0.95 }}
-                    transition={{ duration: 0.15 }}
                     onClick={(e) => e.stopPropagation()}
                     className="absolute right-0 top-full mt-1 w-48 glass-card py-1.5 z-50 shadow-2xl"
                   >
-                    <button
-                      onClick={copyInviteLink}
-                      className="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-slate-300 hover:bg-dark-600 hover:text-white transition-colors"
-                    >
-                      <Link2 size={15} className="text-violet-400" />
-                      Copy invite link
+                    <button onClick={copyInviteLink}
+                      className="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-slate-300 hover:bg-dark-600 hover:text-white transition-colors">
+                      <Link2 size={15} className="text-violet-400" /> Copy invite link
                     </button>
                     <div className="border-t border-slate-800 my-1" />
-                    <button
-                      onClick={handleDeleteRoom}
-                      disabled={deleting}
-                      className="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-red-400 hover:bg-red-500/10 hover:text-red-300 transition-colors"
-                    >
+                    <button onClick={handleDeleteRoom} disabled={deleting}
+                      className="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-red-400 hover:bg-red-500/10 hover:text-red-300 transition-colors">
                       <Trash2 size={15} />
                       {deleting ? 'Deleting…' : 'Delete room'}
                     </button>
@@ -197,10 +247,8 @@ export default function ChatArea({ room, messages, typingUsers, loading, onToggl
           )}
 
           {/* Online users toggle */}
-          <button
-            onClick={onToggleUsers}
-            className="p-2 rounded-lg text-slate-400 hover:text-white hover:bg-dark-700 transition-all"
-          >
+          <button onClick={onToggleUsers}
+            className="p-2 rounded-lg text-slate-400 hover:text-white hover:bg-dark-700 transition-all">
             <Users size={18} />
           </button>
         </div>
@@ -219,23 +267,20 @@ export default function ChatArea({ room, messages, typingUsers, loading, onToggl
             <p className="text-slate-500 text-sm">Be the first to say something!</p>
           </div>
         ) : (
-          <>
-            {messages.map((msg, i) => {
-              const prev = messages[i - 1];
-              const isConsecutive = prev && prev.sender._id === msg.sender._id &&
-                (new Date(msg.createdAt) - new Date(prev.createdAt)) < 60000;
-              return (
-                <MessageBubble
-                  key={msg._id}
-                  message={msg}
-                  isSelf={msg.sender._id === user?._id || msg.sender.name === user?.name}
-                  isConsecutive={isConsecutive}
-                />
-              );
-            })}
-          </>
+          messages.map((msg, i) => {
+            const prev = messages[i - 1];
+            const isConsecutive = prev && prev.sender._id === msg.sender._id &&
+              (new Date(msg.createdAt) - new Date(prev.createdAt)) < 60000;
+            return (
+              <MessageBubble
+                key={msg._id}
+                message={msg}
+                isSelf={msg.sender._id === user?._id || msg.sender.name === user?.name}
+                isConsecutive={isConsecutive}
+              />
+            );
+          })
         )}
-
         {typingList.length > 0 && <TypingIndicator users={typingList} />}
         <div ref={messagesEndRef} />
       </div>
@@ -243,28 +288,19 @@ export default function ChatArea({ room, messages, typingUsers, loading, onToggl
       {/* Input */}
       <div className="px-4 pb-4 pt-2 flex-shrink-0">
         {showEmoji && (
-          <motion.div
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="mb-2 p-3 glass rounded-xl flex flex-wrap gap-2"
-          >
+          <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}
+            className="mb-2 p-3 glass rounded-xl flex flex-wrap gap-2">
             {COMMON_EMOJIS.map((e) => (
-              <button key={e} onClick={() => insertEmoji(e)}
-                className="text-xl hover:scale-125 transition-transform">
-                {e}
-              </button>
+              <button key={e} onClick={() => insertEmoji(e)} className="text-xl hover:scale-125 transition-transform">{e}</button>
             ))}
           </motion.div>
         )}
 
         <div className="flex items-end gap-3 bg-dark-700 rounded-2xl px-4 py-3 border border-slate-700 focus-within:border-violet-500 focus-within:ring-2 focus-within:ring-violet-500/20 transition-all">
-          <button
-            onClick={() => setShowEmoji(!showEmoji)}
-            className={`text-slate-400 hover:text-violet-400 transition-colors mb-0.5 flex-shrink-0 ${showEmoji ? 'text-violet-400' : ''}`}
-          >
+          <button onClick={() => setShowEmoji(!showEmoji)}
+            className={`text-slate-400 hover:text-violet-400 transition-colors mb-0.5 flex-shrink-0 ${showEmoji ? 'text-violet-400' : ''}`}>
             <Smile size={20} />
           </button>
-
           <textarea
             ref={inputRef}
             value={text}
@@ -275,25 +311,14 @@ export default function ChatArea({ room, messages, typingUsers, loading, onToggl
             className="flex-1 bg-transparent text-slate-100 placeholder-slate-500 resize-none outline-none text-sm leading-relaxed max-h-32"
             style={{ minHeight: '24px' }}
           />
-
-          <motion.button
-            whileHover={{ scale: 1.1 }}
-            whileTap={{ scale: 0.9 }}
-            onClick={handleSend}
-            disabled={!text.trim()}
-            className={`flex-shrink-0 w-9 h-9 rounded-xl flex items-center justify-center transition-all ${
-              text.trim()
-                ? 'text-white shadow-lg'
-                : 'text-slate-600 bg-dark-600 cursor-not-allowed'
-            }`}
-            style={text.trim() ? { background: 'linear-gradient(135deg,#7c3aed,#06b6d4)' } : {}}
-          >
+          <motion.button whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }}
+            onClick={handleSend} disabled={!text.trim()}
+            className={`flex-shrink-0 w-9 h-9 rounded-xl flex items-center justify-center transition-all ${text.trim() ? 'text-white shadow-lg' : 'text-slate-600 bg-dark-600 cursor-not-allowed'}`}
+            style={text.trim() ? { background: 'linear-gradient(135deg,#7c3aed,#06b6d4)' } : {}}>
             <Send size={16} />
           </motion.button>
         </div>
-        <p className="text-xs text-slate-700 mt-1.5 text-center">
-          Enter to send · Shift+Enter for new line
-        </p>
+        <p className="text-xs text-slate-700 mt-1.5 text-center">Enter to send · Shift+Enter for new line</p>
       </div>
     </div>
   );

@@ -8,6 +8,7 @@ import Profile from './Components/Profile';
 import ForgotPassword from './Components/ForgotPassword';
 import ResetPassword from './Components/ResetPassword';
 import NotFound from './Components/NotFound';
+import About from './Components/About';
 
 const PageLoader = () => (
   <div className="min-h-screen flex items-center justify-center bg-dark-900">
@@ -46,6 +47,7 @@ export default function App() {
         <Route path="/register" element={<GuestRoute><Register /></GuestRoute>} />
         <Route path="/chat" element={<ProtectedRoute><ChatLayout /></ProtectedRoute>} />
         <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
+        <Route path="/about" element={<About />} />
         <Route path="/forgot-password" element={<ForgotPassword />} />
         <Route path="/reset-password/:id" element={<ResetPassword />} />
         <Route path="*" element={<NotFound />} />
